@@ -18,6 +18,7 @@ import { CreateUsersDto } from './dto/create-users.dto';
 import { UsersService } from './users.service';
 import { UpdateUsersDto } from './dto/update-users.dto';
 import exceptionHandler from 'src/utils/exceptionHandler';
+import { ResponsesMessages } from 'src/interfaces/ResponsesMessages';
 
 @ApiTags('Users')
 @Controller('users')
@@ -43,7 +44,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: 401,
-    description: 'Access token is missing or invalid',
+    description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(200)
   getUsers() {
@@ -98,7 +99,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: 401,
-    description: 'Access token is missing or invalid',
+    description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(201)
   postUsers(@Body() createUsersDto: CreateUsersDto) {
@@ -131,7 +132,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: 401,
-    description: 'Access token is missing or invalid',
+    description: ResponsesMessages.UnauthorizedError,
   })
   @ApiResponse({
     status: 404,
@@ -213,7 +214,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: 401,
-    description: 'Access token is missing or invalid',
+    description: ResponsesMessages.UnauthorizedError,
   })
   @ApiResponse({
     status: 403,
@@ -250,7 +251,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: 401,
-    description: 'Access token is missing or invalid',
+    description: ResponsesMessages.UnauthorizedError,
   })
   @ApiResponse({
     status: 404,
