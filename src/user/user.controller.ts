@@ -15,15 +15,15 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UsersService } from './user.service';
+import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import exceptionHandler from 'src/utils/exceptionHandler';
 import { ResponsesMessages } from 'src/interfaces/ResponsesMessages';
 
 @ApiTags('Users')
 @Controller('user')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   @ApiOperation({
@@ -49,7 +49,7 @@ export class UsersController {
   @HttpCode(200)
   getUsers() {
     try {
-      return this.usersService.getUsers();
+      return this.userService.getUsers();
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -102,9 +102,9 @@ export class UsersController {
     description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(201)
-  postUsers(@Body() createUserDto: CreateUserDto) {
+  postUser(@Body() createUserDto: CreateUserDto) {
     try {
-      return this.usersService.createUser(createUserDto);
+      return this.userService.postUser(createUserDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -141,7 +141,7 @@ export class UsersController {
   @HttpCode(200)
   getUser(@Param('userId') userId: string) {
     try {
-      return this.usersService.getUser(userId);
+      return this.userService.getUser(userId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -230,7 +230,7 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     try {
-      return this.usersService.putUser(userId, updateUserDto);
+      return this.userService.putUser(userId, updateUserDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -260,7 +260,7 @@ export class UsersController {
   @HttpCode(204)
   deleteUser(@Param('userId') userId: string) {
     try {
-      this.usersService.deleteUser(userId);
+      this.userService.deleteUser(userId);
     } catch (error) {
       exceptionHandler(error as Error);
     }

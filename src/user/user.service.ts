@@ -8,12 +8,12 @@ import uuidValidate from 'src/utils/uuidValidate';
 import findUser from 'src/utils/findUser';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   getUsers() {
     return usersDB.map((user) => ({ ...user, password: undefined }));
   }
 
-  createUser({ login, password }: CreateUserDto) {
+  postUser({ login, password }: CreateUserDto) {
     if (!(login && password)) {
       throw new Error('400');
     }
