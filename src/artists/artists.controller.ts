@@ -19,6 +19,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { ResponsesMessages } from 'src/interfaces/ResponsesMessages';
+import exceptionHandler from 'src/utils/exceptionHandler';
 
 @ApiTags('Artists')
 @Controller('artists')
@@ -48,7 +49,11 @@ export class ArtistsController {
   })
   @HttpCode(200)
   getArtists() {
-    return [];
+    try {
+      return this.artistsService.getArtists();
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Post()
@@ -95,8 +100,12 @@ export class ArtistsController {
     description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(201)
-  postArtists() {
-    return [];
+  postArtists(@Body() createArtistDto: CreateArtistDto) {
+    try {
+      return this.artistsService.postArtists(createArtistDto);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Get(':id')
@@ -129,8 +138,12 @@ export class ArtistsController {
     description: 'Artist was not found.',
   })
   @HttpCode(200)
-  getArtist() {
-    return [];
+  getArtist(@Param('id') id: string) {
+    try {
+      return this.artistsService.getArtist(id);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Put(':id')
@@ -180,8 +193,12 @@ export class ArtistsController {
     description: 'Artist was not found.',
   })
   @HttpCode(200)
-  putArtist() {
-    return [];
+  putArtist(@Param('id') id: string, @Body() updateArtistDto: UpdateArtistDto) {
+    try {
+      return this.artistsService.putArtist(id, updateArtistDto);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Delete(':id')
@@ -207,7 +224,11 @@ export class ArtistsController {
     description: 'Artist was not found.',
   })
   @HttpCode(204)
-  deleteArtist() {
-    return [];
+  deleteArtist(@Param('id') id: string) {
+    try {
+      return this.artistsService.deleteArtist(id);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 }
