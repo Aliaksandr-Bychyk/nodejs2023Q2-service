@@ -8,7 +8,7 @@ import {
   Put,
   HttpCode,
 } from '@nestjs/common';
-import { ArtistsService } from './artists.service';
+import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import {
@@ -22,9 +22,9 @@ import { ResponsesMessages } from 'src/interfaces/ResponsesMessages';
 import exceptionHandler from 'src/utils/exceptionHandler';
 
 @ApiTags('Artists')
-@Controller('artists')
-export class ArtistsController {
-  constructor(private readonly artistsService: ArtistsService) {}
+@Controller('artist')
+export class ArtistController {
+  constructor(private readonly artistService: ArtistService) {}
 
   @Get()
   @ApiOperation({
@@ -50,7 +50,7 @@ export class ArtistsController {
   @HttpCode(200)
   getArtists() {
     try {
-      return this.artistsService.getArtists();
+      return this.artistService.getArtists();
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -100,9 +100,9 @@ export class ArtistsController {
     description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(201)
-  postArtists(@Body() createArtistDto: CreateArtistDto) {
+  postArtist(@Body() createArtistDto: CreateArtistDto) {
     try {
-      return this.artistsService.postArtists(createArtistDto);
+      return this.artistService.postArtist(createArtistDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -140,7 +140,7 @@ export class ArtistsController {
   @HttpCode(200)
   getArtist(@Param('id') id: string) {
     try {
-      return this.artistsService.getArtist(id);
+      return this.artistService.getArtist(id);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -195,7 +195,7 @@ export class ArtistsController {
   @HttpCode(200)
   putArtist(@Param('id') id: string, @Body() updateArtistDto: UpdateArtistDto) {
     try {
-      return this.artistsService.putArtist(id, updateArtistDto);
+      return this.artistService.putArtist(id, updateArtistDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -226,7 +226,7 @@ export class ArtistsController {
   @HttpCode(204)
   deleteArtist(@Param('id') id: string) {
     try {
-      return this.artistsService.deleteArtist(id);
+      return this.artistService.deleteArtist(id);
     } catch (error) {
       exceptionHandler(error as Error);
     }

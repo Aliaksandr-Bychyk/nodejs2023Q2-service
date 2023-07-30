@@ -8,13 +8,12 @@ import findArtist from 'src/utils/findArtist';
 import uuidValidate from 'src/utils/uuidValidate';
 
 @Injectable()
-export class ArtistsService {
+export class ArtistService {
   getArtists() {
     return artistsDB;
   }
 
-  postArtists({ name, grammy }: CreateArtistDto) {
-    console.log(name, grammy);
+  postArtist({ name, grammy }: CreateArtistDto) {
     if (!(name && grammy !== undefined)) {
       throw new Error('400');
     }
@@ -39,9 +38,19 @@ export class ArtistsService {
 
   putArtist(id: string, { name, grammy }: UpdateArtistDto) {
     uuidValidate(id);
+    if (
+      !(
+        name &&
+        grammy !== undefined &&
+        typeof name === 'string' &&
+        typeof grammy === 'boolean'
+      )
+    ) {
+      throw new Error('400');
+    }
     const artist = findArtist(id);
-    artist.name = name ? name : artist.name;
-    artist.grammy = grammy ? grammy : artist.grammy;
+    artist.name = name;
+    artist.grammy = grammy;
     return artist;
   }
 

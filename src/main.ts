@@ -5,7 +5,7 @@ import { join } from 'path';
 import { readFile } from 'fs/promises';
 import { load } from 'js-yaml';
 import { UsersModule } from './user/user.module';
-import { ArtistsModule } from './artists/artists.module';
+import { ArtistModule } from './artist/artist.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,7 +15,7 @@ async function bootstrap() {
 
   const config: OpenAPIObject = load(apiYaml) as OpenAPIObject;
   const document = SwaggerModule.createDocument(app, config, {
-    include: [UsersModule, ArtistsModule],
+    include: [UsersModule, ArtistModule],
   });
 
   SwaggerModule.setup('docs', app, document);
