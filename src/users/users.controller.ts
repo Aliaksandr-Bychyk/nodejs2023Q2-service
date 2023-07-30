@@ -121,6 +121,82 @@ export class UsersController {
   }
 
   @Put('{userId}')
+  @ApiOperation({
+    summary: "Update a user's password",
+    description: "Updates a user's password by ID",
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            title: 'example',
+            properties: {
+              oldPassword: {
+                type: 'string',
+                description: "The user's old password",
+              },
+              newPassword: {
+                type: 'string',
+                description: "The user's new password",
+              },
+            },
+            required: ['oldPassword', 'newPassword'],
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been updated.',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          title: 'example',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+            },
+            login: {
+              type: 'string',
+              example: 'TestUser',
+            },
+            version: {
+              type: 'integer',
+              example: 2,
+            },
+            createAt: {
+              type: 'integer',
+              example: 1655000000,
+            },
+            updateAt: {
+              type: 'integer',
+              example: 1655999999,
+            },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request. userId is invalid (not uuid)',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Access token is missing or invalid',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'oldPassword is wrong',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
+  })
   putUser(@Param('userId') userId: string) {
     return { userId };
   }
