@@ -42,18 +42,19 @@ export class UsersService {
     return user;
   }
 
-  putUser(userId: string, updateUserDto: UpdateUsersDto) {
+  putUser(userId: string, { oldPassword, newPassword }: UpdateUsersDto) {
     uuidValidate(userId);
     const user = findUser(userId);
+    if (!(oldPassword && newPassword)) {
+      throw new Error('400');
+    }
     const hashedOldPassword = createHash('sha256')
-      .update(updateUserDto.oldPassword)
+      .update(oldPassword)
       .digest('hex');
     if (user.password !== hashedOldPassword) {
       throw new Error('403');
     }
-    user.password = createHash('sha256')
-      .update(updateUserDto.newPassword)
-      .digest('hex');
+    user.password = createHash('sha256').update(newPassword).digest('hex');
     user.version = user.version + 1;
     user.updatedAt = Math.floor(Date.now() / 1000);
     return {
