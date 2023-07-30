@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { TrackModule } from './track/track.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,7 +18,13 @@ async function bootstrap() {
 
   const config: OpenAPIObject = load(apiYaml) as OpenAPIObject;
   const document = SwaggerModule.createDocument(app, config, {
-    include: [UserModule, ArtistModule, AlbumModule, TrackModule],
+    include: [
+      UserModule,
+      ArtistModule,
+      AlbumModule,
+      TrackModule,
+      FavoritesModule,
+    ],
   });
 
   SwaggerModule.setup('docs', app, document);
