@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import usersDB from 'src/databases/usersDB';
 import { CreateUsersDto } from './dto/create-users.dto';
 import { IUser } from 'src/interfaces/IUser';
-import { v5 } from 'uuid';
+import { v4 } from 'uuid';
 import { createHash } from 'node:crypto';
 import { UpdateUsersDto } from './dto/update-users.dto';
 import uuidValidate from 'src/utils/uuidValidate';
@@ -19,7 +19,7 @@ export class UsersService {
       throw new Error('400');
     }
     const newUser: IUser = {
-      id: v5(login, v5.URL),
+      id: v4(),
       login,
       password: createHash('sha256').update(password).digest('hex'),
       version: 1,
