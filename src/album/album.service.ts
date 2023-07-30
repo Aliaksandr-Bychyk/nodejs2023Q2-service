@@ -1,26 +1,61 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import albumsDB from 'src/databases/albumsDB';
+import { IAlbum } from 'src/interfaces/IAlbum';
+import { v4 } from 'uuid';
+import uuidValidate from 'src/utils/uuidValidate';
+import findAlbum from 'src/utils/findAlbum';
 
 @Injectable()
 export class AlbumService {
-  create(createAlbumDto: CreateAlbumDto) {
-    return 'This action adds a new album';
+  getAlbums() {
+    return albumsDB;
   }
 
-  findAll() {
-    return `This action returns all album`;
+  postAlbum({ name, year, artistId }: CreateAlbumDto) {
+    if (!(name && year !== undefined)) {
+      throw new Error('400');
+    }
+    const newAlbum: IAlbum = {
+      id: v4(),
+      name,
+      year,
+      artistId: artistId ?? null,
+    };
+    albumsDB.push(newAlbum);
+    return newAlbum;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} album`;
+  getAlbum(albumId: string) {
+    uuidValidate(albumId);
+    const album = findAlbum(albumId);
+    return album;
   }
 
-  update(id: number, updateAlbumDto: UpdateAlbumDto) {
-    return `This action updates a #${id} album`;
+  putAlbum(albumId: string, { name, year, artistId }: UpdateAlbumDto) {
+    uuidValidate(albumId);
+    if (
+      !(
+        name &&
+        year !== undefined &&
+        typeof name === 'string' &&
+        typeof year === 'number'
+      )
+    ) {
+      throw new Error('400');
+    }
+    const album = findAlbum(albumId);
+    album.name = name;
+    album.year = year;
+    album.artistId = artistId ?? null;
+    return album;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} album`;
+  deleteAlbum(albumId: string) {
+    uuidValidate(albumId);
+    const album = findAlbum(albumId);
+    const albumIndex = albumsDB.indexOf(album);
+    albumsDB.splice(albumIndex, 1);
   }
 }

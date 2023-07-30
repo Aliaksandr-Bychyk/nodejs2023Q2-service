@@ -26,14 +26,14 @@ export class ArtistService {
     return newArtist;
   }
 
-  getArtist(id: string) {
-    uuidValidate(id);
-    const artist = findArtist(id);
+  getArtist(artistId: string) {
+    uuidValidate(artistId);
+    const artist = findArtist(artistId);
     return artist;
   }
 
-  putArtist(id: string, { name, grammy }: UpdateArtistDto) {
-    uuidValidate(id);
+  putArtist(artistId: string, { name, grammy }: UpdateArtistDto) {
+    uuidValidate(artistId);
     if (
       !(
         name &&
@@ -44,15 +44,15 @@ export class ArtistService {
     ) {
       throw new Error('400');
     }
-    const artist = findArtist(id);
+    const artist = findArtist(artistId);
     artist.name = name;
     artist.grammy = grammy;
     return artist;
   }
 
-  deleteArtist(id: string) {
-    uuidValidate(id);
-    const artist = findArtist(id);
+  deleteArtist(artistId: string) {
+    uuidValidate(artistId);
+    const artist = findArtist(artistId);
     const artistIndex = artistsDB.indexOf(artist);
     artistsDB.splice(artistIndex, 1);
   }

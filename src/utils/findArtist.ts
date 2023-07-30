@@ -1,11 +1,11 @@
 import artistsDB from 'src/databases/artistsDB';
 
 const findArtist = (id: string) => {
-  const user = artistsDB.find((artist) => artist.id === id);
-  if (!user) {
+  const artist = artistsDB.find((artist) => artist.id === id);
+  if (!artist) {
     throw new Error('404');
   }
-  return user;
+  return artist;
 };
 
 export default findArtist;

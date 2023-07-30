@@ -19,6 +19,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { ResponsesMessages } from 'src/interfaces/ResponsesMessages';
+import exceptionHandler from 'src/utils/exceptionHandler';
 
 @ApiTags('Albums')
 @Controller('album')
@@ -48,7 +49,11 @@ export class AlbumController {
   })
   @HttpCode(200)
   getAlbums() {
-    return [];
+    try {
+      return this.albumService.getAlbums();
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Post()
@@ -101,8 +106,12 @@ export class AlbumController {
     description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(201)
-  postAlbum() {
-    return [];
+  postAlbum(@Body() createAlbumDto: CreateAlbumDto) {
+    try {
+      return this.albumService.postAlbum(createAlbumDto);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Get(':albumId')
@@ -135,8 +144,12 @@ export class AlbumController {
     description: 'Album was not found.',
   })
   @HttpCode(200)
-  getAlbum() {
-    return [];
+  getAlbum(@Param('albumId') albumId: string) {
+    try {
+      return this.albumService.getAlbum(albumId);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Put(':albumId')
@@ -192,8 +205,15 @@ export class AlbumController {
     description: 'Album was not found.',
   })
   @HttpCode(200)
-  putAlbum() {
-    return [];
+  putAlbum(
+    @Param('albumId') albumId: string,
+    @Body() updateAlbumDto: UpdateAlbumDto,
+  ) {
+    try {
+      return this.albumService.putAlbum(albumId, updateAlbumDto);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Delete(':albumId')
@@ -219,7 +239,11 @@ export class AlbumController {
     description: 'Album was not found.',
   })
   @HttpCode(204)
-  deleteAlbum() {
-    return [];
+  deleteAlbum(@Param('albumId') albumId: string) {
+    try {
+      return this.albumService.deleteAlbum(albumId);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 }
