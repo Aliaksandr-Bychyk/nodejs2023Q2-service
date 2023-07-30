@@ -14,14 +14,14 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { CreateUsersDto } from './dto/create-users.dto';
-import { UsersService } from './users.service';
-import { UpdateUsersDto } from './dto/update-users.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UsersService } from './user.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 import exceptionHandler from 'src/utils/exceptionHandler';
 import { ResponsesMessages } from 'src/interfaces/ResponsesMessages';
 
 @ApiTags('Users')
-@Controller('users')
+@Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -102,9 +102,9 @@ export class UsersController {
     description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(201)
-  postUsers(@Body() createUsersDto: CreateUsersDto) {
+  postUsers(@Body() createUserDto: CreateUserDto) {
     try {
-      return this.usersService.createUser(createUsersDto);
+      return this.usersService.createUser(createUserDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -227,10 +227,10 @@ export class UsersController {
   @HttpCode(200)
   putUser(
     @Param('userId') userId: string,
-    @Body() updateUsersDto: UpdateUsersDto,
+    @Body() updateUserDto: UpdateUserDto,
   ) {
     try {
-      return this.usersService.putUser(userId, updateUsersDto);
+      return this.usersService.putUser(userId, updateUserDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }

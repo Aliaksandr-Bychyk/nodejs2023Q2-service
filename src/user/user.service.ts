@@ -1,62 +1,52 @@
 import { Injectable } from '@nestjs/common';
 import usersDB from 'src/databases/usersDB';
-import { CreateUsersDto } from './dto/create-users.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { IUser } from 'src/interfaces/IUser';
 import { v4 } from 'uuid';
-import { createHash } from 'node:crypto';
-import { UpdateUsersDto } from './dto/update-users.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import uuidValidate from 'src/utils/uuidValidate';
 import findUser from 'src/utils/findUser';
 
 @Injectable()
 export class UsersService {
   getUsers() {
-    return usersDB;
+    return usersDB.map((user) => ({ ...user, password: undefined }));
   }
 
-  createUser({ login, password }: CreateUsersDto) {
+  createUser({ login, password }: CreateUserDto) {
     if (!(login && password)) {
       throw new Error('400');
     }
     const newUser: IUser = {
       id: v4(),
       login,
-      password: createHash('sha256').update(password).digest('hex'),
+      password,
       version: 1,
-      createdAt: Math.floor(Date.now() / 1000),
-      updatedAt: Math.floor(Date.now() / 1000),
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
     };
     usersDB.push(newUser);
-    return {
-      id: newUser.id,
-      login: newUser.login,
-      version: newUser.version,
-      createdAt: newUser.createdAt,
-      updatedAt: newUser.updatedAt,
-    };
+    return { ...newUser, password: undefined };
   }
 
   getUser(userId: string) {
     uuidValidate(userId);
     const user = findUser(userId);
-    return user;
+    return { ...user, password: undefined };
   }
 
-  putUser(userId: string, { oldPassword, newPassword }: UpdateUsersDto) {
+  putUser(userId: string, { oldPassword, newPassword }: UpdateUserDto) {
     uuidValidate(userId);
-    const user = findUser(userId);
     if (!(oldPassword && newPassword)) {
       throw new Error('400');
     }
-    const hashedOldPassword = createHash('sha256')
-      .update(oldPassword)
-      .digest('hex');
-    if (user.password !== hashedOldPassword) {
+    const user = findUser(userId);
+    if (user.password !== oldPassword) {
       throw new Error('403');
     }
-    user.password = createHash('sha256').update(newPassword).digest('hex');
+    user.password = newPassword;
     user.version = user.version + 1;
-    user.updatedAt = Math.floor(Date.now() / 1000);
+    user.updatedAt = Date.now();
     return {
       id: user.id,
       login: user.login,
