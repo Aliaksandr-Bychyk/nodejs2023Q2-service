@@ -108,8 +108,8 @@ export class ArtistController {
     }
   }
 
-  @Get(':id')
-  @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
+  @Get(':artistId')
+  @ApiParam({ name: 'artistId', type: 'string', format: 'uuid' })
   @ApiOperation({
     summary: 'Get single artist by id',
     description: 'Get single artist by id',
@@ -138,16 +138,16 @@ export class ArtistController {
     description: 'Artist was not found.',
   })
   @HttpCode(200)
-  getArtist(@Param('id') id: string) {
+  getArtist(@Param('artistId') artistId: string) {
     try {
-      return this.artistService.getArtist(id);
+      return this.artistService.getArtist(artistId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
   }
 
-  @Put(':id')
-  @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
+  @Put(':artistId')
+  @ApiParam({ name: 'artistId', type: 'string', format: 'uuid' })
   @ApiOperation({
     summary: 'Update artist information',
     description: 'Update artist information by UUID',
@@ -182,7 +182,7 @@ export class ArtistController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Bad request. userId is invalid (not uuid)',
+    description: 'Bad request. artistId is invalid (not uuid)',
   })
   @ApiResponse({
     status: 401,
@@ -193,16 +193,19 @@ export class ArtistController {
     description: 'Artist was not found.',
   })
   @HttpCode(200)
-  putArtist(@Param('id') id: string, @Body() updateArtistDto: UpdateArtistDto) {
+  putArtist(
+    @Param('artistId') artistId: string,
+    @Body() updateArtistDto: UpdateArtistDto,
+  ) {
     try {
-      return this.artistService.putArtist(id, updateArtistDto);
+      return this.artistService.putArtist(artistId, updateArtistDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }
   }
 
-  @Delete(':id')
-  @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
+  @Delete(':artistId')
+  @ApiParam({ name: 'artistId', type: 'string', format: 'uuid' })
   @ApiOperation({
     summary: 'Delete artist',
     description: 'Delete artist from library',
@@ -213,7 +216,7 @@ export class ArtistController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Bad request. userId is invalid (not uuid)',
+    description: 'Bad request. artistId is invalid (not uuid)',
   })
   @ApiResponse({
     status: 401,
@@ -224,9 +227,9 @@ export class ArtistController {
     description: 'Artist was not found.',
   })
   @HttpCode(204)
-  deleteArtist(@Param('id') id: string) {
+  deleteArtist(@Param('artistId') artistId: string) {
     try {
-      return this.artistService.deleteArtist(id);
+      return this.artistService.deleteArtist(artistId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
