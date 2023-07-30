@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Put,
@@ -213,7 +214,7 @@ export class UsersController {
     return this.usersService.putUser(userId, updateUsersDto);
   }
 
-  @Delete('{userId}')
+  @Delete(':userId')
   @ApiOperation({
     summary: 'Delete user',
     description: 'Deletes user by ID.',
@@ -234,7 +235,8 @@ export class UsersController {
     status: 404,
     description: 'User not found',
   })
+  @HttpCode(204)
   deleteUser(@Param('userId') userId: string) {
-    return { userId };
+    return this.usersService.deleteUser(userId);
   }
 }

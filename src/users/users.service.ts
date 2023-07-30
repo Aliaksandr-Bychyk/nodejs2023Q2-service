@@ -60,7 +60,10 @@ export class UsersService {
     };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  deleteUser(userId: string) {
+    usersDB.splice(
+      usersDB.findIndex((user) => user.id === userId),
+      1,
+    );
   }
 }
