@@ -7,7 +7,12 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { CreateUsersDto } from './dto/create-users.dto';
 import { UsersService } from './users.service';
 
@@ -28,33 +33,7 @@ export class UsersController {
       'application/json': {
         schema: {
           type: 'array',
-          items: {
-            type: 'object',
-            title: 'User',
-            properties: {
-              id: {
-                type: 'string',
-                format: 'uuid',
-              },
-              login: {
-                type: 'string',
-                example: 'TestUser',
-              },
-              version: {
-                type: 'number',
-                example: 1,
-              },
-              createAt: {
-                type: 'number',
-                example: 1655000000,
-              },
-              updateAt: {
-                type: 'number',
-                example: 1655000000,
-              },
-            },
-            required: ['id', 'login'],
-          },
+          items: { $ref: getSchemaPath('User') },
         },
       },
     },
