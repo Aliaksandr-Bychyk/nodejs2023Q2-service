@@ -17,6 +17,7 @@ import {
 import { CreateUsersDto } from './dto/create-users.dto';
 import { UsersService } from './users.service';
 import { UpdateUsersDto } from './dto/update-users.dto';
+import exceptionHandler from 'src/utils/exceptionHandler';
 
 @ApiTags('Users')
 @Controller('users')
@@ -44,8 +45,13 @@ export class UsersController {
     status: 401,
     description: 'Access token is missing or invalid',
   })
+  @HttpCode(200)
   getUsers() {
-    return this.usersService.getUsers();
+    try {
+      return this.usersService.getUsers();
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Post()
@@ -94,8 +100,13 @@ export class UsersController {
     status: 401,
     description: 'Access token is missing or invalid',
   })
+  @HttpCode(201)
   postUsers(@Body() createUsersDto: CreateUsersDto) {
-    return this.usersService.createUser(createUsersDto);
+    try {
+      return this.usersService.createUser(createUsersDto);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Get(':userId')
@@ -126,8 +137,13 @@ export class UsersController {
     status: 404,
     description: 'User not found',
   })
+  @HttpCode(200)
   getUser(@Param('userId') userId: string) {
-    return this.usersService.getUser(userId);
+    try {
+      return this.usersService.getUser(userId);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Put(':userId')
@@ -207,11 +223,16 @@ export class UsersController {
     status: 404,
     description: 'User not found',
   })
+  @HttpCode(200)
   putUser(
     @Param('userId') userId: string,
     @Body() updateUsersDto: UpdateUsersDto,
   ) {
-    return this.usersService.putUser(userId, updateUsersDto);
+    try {
+      return this.usersService.putUser(userId, updateUsersDto);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Delete(':userId')
@@ -237,6 +258,10 @@ export class UsersController {
   })
   @HttpCode(204)
   deleteUser(@Param('userId') userId: string) {
-    return this.usersService.deleteUser(userId);
+    try {
+      this.usersService.deleteUser(userId);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 }

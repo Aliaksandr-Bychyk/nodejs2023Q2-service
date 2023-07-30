@@ -5,6 +5,8 @@ import { IUser } from 'src/interfaces/IUser';
 import { v5 } from 'uuid';
 import { createHash } from 'node:crypto';
 import { UpdateUsersDto } from './dto/update-users.dto';
+import uuidValidate from 'src/utils/uuidValidate';
+import findUser from 'src/utils/findUser';
 
 @Injectable()
 export class UsersService {
@@ -13,6 +15,9 @@ export class UsersService {
   }
 
   createUser({ login, password }: CreateUsersDto) {
+    if (!(login && password)) {
+      throw new Error('400');
+    }
     const newUser: IUser = {
       id: v5(login, v5.URL),
       login,
@@ -32,19 +37,19 @@ export class UsersService {
   }
 
   getUser(userId: string) {
-    return usersDB.find((user) => user.id === userId);
+    uuidValidate(userId);
+    const user = findUser(userId);
+    return user;
   }
 
   putUser(userId: string, updateUserDto: UpdateUsersDto) {
-    const user = usersDB.find((user) => user.id === userId);
-    if (!user) {
-      throw new Error();
-    }
+    uuidValidate(userId);
+    const user = findUser(userId);
     const hashedOldPassword = createHash('sha256')
       .update(updateUserDto.oldPassword)
       .digest('hex');
     if (user.password !== hashedOldPassword) {
-      throw new Error();
+      throw new Error('403');
     }
     user.password = createHash('sha256')
       .update(updateUserDto.newPassword)
@@ -61,9 +66,9 @@ export class UsersService {
   }
 
   deleteUser(userId: string) {
-    usersDB.splice(
-      usersDB.findIndex((user) => user.id === userId),
-      1,
-    );
+    uuidValidate(userId);
+    const user = findUser(userId);
+    const userIndex = usersDB.indexOf(user);
+    usersDB.splice(userIndex, 1);
   }
 }
