@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import {
   ApiOperation,
   ApiResponse,
@@ -43,14 +35,46 @@ export class UsersController {
     description: 'Access token is missing or invalid',
   })
   getUsers() {
-    // return [];
     return this.usersService.getUsers();
   }
 
   @Post()
+  @ApiOperation({
+    summary: 'Create user',
+    description: 'Creates a new user',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            title: 'example',
+            properties: {
+              login: {
+                type: 'string',
+                description: "The user's login",
+              },
+              password: {
+                type: 'string',
+                description: "The user's password",
+              },
+            },
+            required: ['login', 'password'],
+          },
+        },
+      },
+    },
+  })
   @ApiResponse({
     status: 201,
-    description: 'The user has been created.',
+    description: 'The user has been created',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath('User'),
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 400,
@@ -60,7 +84,7 @@ export class UsersController {
     status: 401,
     description: 'Access token is missing or invalid.',
   })
-  postUsers(@Body() createUsersDto: CreateUsersDto) {
+  postUsers(createUsersDto: CreateUsersDto) {
     return [];
   }
 
