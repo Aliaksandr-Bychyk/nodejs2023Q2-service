@@ -202,6 +202,26 @@ export class UsersController {
   }
 
   @Delete('{userId}')
+  @ApiOperation({
+    summary: 'Delete user',
+    description: 'Deletes user by ID.',
+  })
+  @ApiResponse({
+    status: 204,
+    description: 'The user has been deleted',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request. userId is invalid (not uuid)',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Access token is missing or invalid',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
+  })
   deleteUser(@Param('userId') userId: string) {
     return { userId };
   }
