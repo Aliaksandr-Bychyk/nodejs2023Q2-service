@@ -23,11 +23,7 @@ export class ArtistService {
       grammy,
     };
     artistsDB.push(newArtist);
-    return {
-      id: newArtist.id,
-      name: newArtist.name,
-      grammy: newArtist.grammy,
-    };
+    return newArtist;
   }
 
   getArtist(id: string) {
