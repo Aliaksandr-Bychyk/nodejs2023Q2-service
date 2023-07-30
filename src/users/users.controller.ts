@@ -82,13 +82,40 @@ export class UsersController {
   })
   @ApiResponse({
     status: 401,
-    description: 'Access token is missing or invalid.',
+    description: 'Access token is missing or invalid',
   })
   postUsers(createUsersDto: CreateUsersDto) {
     return [];
   }
 
   @Get('{userId}')
+  @ApiOperation({
+    summary: 'Get single user by id',
+    description: 'Get single user by id',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful operation',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath('User'),
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request. userId is invalid (not uuid)',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Access token is missing or invalid',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
+  })
   getUser(@Param('userId') userId: string) {
     return { userId };
   }
