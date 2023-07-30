@@ -1,26 +1,66 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
+import tracksDB from 'src/databases/tracksDB';
+import { ITrack } from 'src/interfaces/ITrack';
+import { v4 } from 'uuid';
+import uuidValidate from 'src/utils/uuidValidate';
+import findTrack from 'src/utils/findTrack';
 
 @Injectable()
 export class TrackService {
-  create(createTrackDto: CreateTrackDto) {
-    return 'This action adds a new track';
+  getTracks() {
+    return tracksDB;
   }
 
-  findAll() {
-    return `This action returns all track`;
+  postTrack({ name, artistId, albumId, duration }: CreateTrackDto) {
+    if (!(name && duration !== undefined)) {
+      throw new Error('400');
+    }
+    const newTrack: ITrack = {
+      id: v4(),
+      name,
+      artistId: artistId ?? null,
+      albumId: albumId ?? null,
+      duration,
+    };
+    tracksDB.push(newTrack);
+    return newTrack;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} track`;
+  getTrack(trackId: string) {
+    uuidValidate(trackId);
+    const track = findTrack(trackId);
+    return track;
   }
 
-  update(id: number, updateTrackDto: UpdateTrackDto) {
-    return `This action updates a #${id} track`;
+  putTrack(
+    trackId: string,
+    { name, artistId, albumId, duration }: UpdateTrackDto,
+  ) {
+    uuidValidate(trackId);
+    if (
+      !(
+        name &&
+        duration !== undefined &&
+        typeof name === 'string' &&
+        typeof duration === 'number'
+      )
+    ) {
+      throw new Error('400');
+    }
+    const album = findTrack(trackId);
+    album.name = name;
+    album.artistId = artistId ?? null;
+    album.albumId = albumId ?? null;
+    album.duration = duration;
+    return album;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} track`;
+  deleteTrack(trackId: string) {
+    uuidValidate(trackId);
+    const track = findTrack(trackId);
+    const trackIndex = tracksDB.indexOf(track);
+    tracksDB.splice(trackIndex, 1);
   }
 }
