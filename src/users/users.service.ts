@@ -30,8 +30,8 @@ export class UsersService {
     };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  getUser(userId: string) {
+    return userDB.find((user) => user.id === userId);
   }
 
   update(id: number /*, updateUserDto: UpdateUserDto*/) {

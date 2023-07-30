@@ -6,9 +6,11 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import {
   ApiOperation,
+  ApiParam,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -93,11 +95,10 @@ export class UsersController {
     description: 'Access token is missing or invalid',
   })
   postUsers(@Body() createUsersDto: CreateUsersDto) {
-    console.log(createUsersDto);
     return this.usersService.createUser(createUsersDto);
   }
 
-  @Get('{userId}')
+  @Get(':userId')
   @ApiOperation({
     summary: 'Get single user by id',
     description: 'Get single user by id',
@@ -126,7 +127,7 @@ export class UsersController {
     description: 'User not found',
   })
   getUser(@Param('userId') userId: string) {
-    return { userId };
+    return this.usersService.getUser(userId);
   }
 
   @Put('{userId}')
