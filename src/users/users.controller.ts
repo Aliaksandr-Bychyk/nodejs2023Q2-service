@@ -6,17 +6,16 @@ import {
   Param,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 import {
   ApiOperation,
-  ApiParam,
   ApiResponse,
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
 import { CreateUsersDto } from './dto/create-users.dto';
 import { UsersService } from './users.service';
+import { UpdateUsersDto } from './dto/update-users.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -130,7 +129,7 @@ export class UsersController {
     return this.usersService.getUser(userId);
   }
 
-  @Put('{userId}')
+  @Put(':userId')
   @ApiOperation({
     summary: "Update a user's password",
     description: "Updates a user's password by ID",
@@ -207,8 +206,11 @@ export class UsersController {
     status: 404,
     description: 'User not found',
   })
-  putUser(@Param('userId') userId: string) {
-    return { userId };
+  putUser(
+    @Param('userId') userId: string,
+    @Body() updateUsersDto: UpdateUsersDto,
+  ) {
+    return this.usersService.putUser(userId, updateUsersDto);
   }
 
   @Delete('{userId}')

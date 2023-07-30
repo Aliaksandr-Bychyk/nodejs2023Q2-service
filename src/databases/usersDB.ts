@@ -1,6 +1,6 @@
 import { IUser } from 'src/interfaces/IUser';
 
-const userDB: IUser[] = [
+const usersDB: IUser[] = [
   {
     id: 'd7d59e7d-cf83-5b69-a33b-8912311ceb6e',
     login: 'Aliaksandr',
@@ -12,4 +12,4 @@ const userDB: IUser[] = [
   },
 ];
 
-export default userDB;
+export default usersDB;
