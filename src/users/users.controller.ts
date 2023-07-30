@@ -1,4 +1,12 @@
-import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import {
   ApiOperation,
   ApiResponse,
@@ -84,8 +92,9 @@ export class UsersController {
     status: 401,
     description: 'Access token is missing or invalid',
   })
-  postUsers(createUsersDto: CreateUsersDto) {
-    return [];
+  postUsers(@Body() createUsersDto: CreateUsersDto) {
+    console.log(createUsersDto);
+    return this.usersService.createUser(createUsersDto);
   }
 
   @Get('{userId}')
