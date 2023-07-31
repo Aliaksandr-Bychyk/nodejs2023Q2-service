@@ -130,9 +130,9 @@ export class FavoritesController {
     description: "Album with id doesn't exist.",
   })
   @HttpCode(201)
-  postFavoritesAlbum(@Param('trackId') trackId: string) {
+  postFavoritesAlbum(@Param('albumId') albumId: string) {
     try {
-      return this.favoritesService.postFavoritesAlbum(trackId);
+      return this.favoritesService.postFavoritesAlbum(albumId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -161,9 +161,9 @@ export class FavoritesController {
     description: 'Album was not found',
   })
   @HttpCode(204)
-  deleteFavoritesAlbum(@Param('trackId') trackId: string) {
+  deleteFavoritesAlbum(@Param('albumId') albumId: string) {
     try {
-      return this.favoritesService.deleteFavoritesAlbum(trackId);
+      return this.favoritesService.deleteFavoritesAlbum(albumId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -192,9 +192,9 @@ export class FavoritesController {
     description: "Artist with id doesn't exist.",
   })
   @HttpCode(201)
-  postFavoritesArtist(@Param('trackId') trackId: string) {
+  postFavoritesArtist(@Param('artistId') artistId: string) {
     try {
-      return this.favoritesService.postFavoritesArtist(trackId);
+      return this.favoritesService.postFavoritesArtist(artistId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -223,9 +223,9 @@ export class FavoritesController {
     description: 'Artist was not found',
   })
   @HttpCode(204)
-  deleteFavoritesArtist(@Param('trackId') trackId: string) {
+  deleteFavoritesArtist(@Param('artistId') artistId: string) {
     try {
-      return this.favoritesService.deleteFavoritesArtist(trackId);
+      return this.favoritesService.deleteFavoritesArtist(artistId);
     } catch (error) {
       exceptionHandler(error as Error);
     }

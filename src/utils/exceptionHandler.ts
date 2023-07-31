@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   NotFoundException,
   UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 
 const errorList = [
@@ -10,6 +11,7 @@ const errorList = [
   { code: '403', handler: ForbiddenException },
   { code: '404', handler: NotFoundException },
   { code: '401', handler: UnauthorizedException },
+  { code: '422', handler: UnprocessableEntityException },
 ];
 
 const exceptionHandler = (error: Error) => {

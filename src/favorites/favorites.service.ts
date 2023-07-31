@@ -1,26 +1,52 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFavoriteDto } from './dto/create-favorite.dto';
-import { UpdateFavoriteDto } from './dto/update-favorite.dto';
+import albumsDB from 'src/databases/albumsDB';
+import artistsDB from 'src/databases/artistsDB';
+import favoritesDB from 'src/databases/favoritesDB';
+import tracksDB from 'src/databases/tracksDB';
+import { IDatabase } from 'src/interfaces/IDatabase';
+import findRecord from 'src/utils/findRecord';
+import uuidValidate from 'src/utils/uuidValidate';
 
 @Injectable()
 export class FavoritesService {
-  create(createFavoriteDto: CreateFavoriteDto) {
-    return 'This action adds a new favorite';
+  getFavorites() {
+    return favoritesDB;
   }
 
-  findAll() {
-    return `This action returns all favorites`;
+  postFavoritesTrack(trackId: string) {
+    this.postFavorites(trackId, tracksDB, 'tracks');
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} favorite`;
+  deleteFavoritesTrack(trackId: string) {
+    this.deleteFavorites(trackId, 'tracks');
   }
 
-  update(id: number, updateFavoriteDto: UpdateFavoriteDto) {
-    return `This action updates a #${id} favorite`;
+  postFavoritesAlbum(albumId: string) {
+    this.postFavorites(albumId, albumsDB, 'albums');
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} favorite`;
+  deleteFavoritesAlbum(albumId: string) {
+    this.deleteFavorites(albumId, 'albums');
+  }
+
+  postFavoritesArtist(artistId: string) {
+    this.postFavorites(artistId, artistsDB, 'artists');
+  }
+
+  deleteFavoritesArtist(artistId: string) {
+    this.deleteFavorites(artistId, 'artists');
+  }
+
+  postFavorites(id: string, database: IDatabase[], type: string) {
+    uuidValidate(id);
+    const record = findRecord(database, id, '422');
+    favoritesDB[type].push(record);
+  }
+
+  deleteFavorites(id: string, type: string) {
+    uuidValidate(id);
+    const record = findRecord(favoritesDB[type], id);
+    const recordIndex = favoritesDB[type].indexOf(record);
+    favoritesDB[type].splice(recordIndex, 1);
   }
 }
