@@ -6,6 +6,7 @@ import { IAlbum } from 'src/interfaces/IAlbum';
 import { v4 } from 'uuid';
 import uuidValidate from 'src/utils/uuidValidate';
 import findRecord from 'src/utils/findRecord';
+import tracksDB from 'src/databases/tracksDB';
 
 @Injectable()
 export class AlbumService {
@@ -57,5 +58,9 @@ export class AlbumService {
     const album = findRecord(albumsDB, albumId);
     const albumIndex = albumsDB.indexOf(album as IAlbum);
     albumsDB.splice(albumIndex, 1);
+    const track = tracksDB.find((track) => track.albumId === albumId);
+    if (track) {
+      track.albumId = null;
+    }
   }
 }
