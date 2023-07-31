@@ -5,7 +5,7 @@ import { IUser } from 'src/interfaces/IUser';
 import { v4 } from 'uuid';
 import { UpdateUserDto } from './dto/update-user.dto';
 import uuidValidate from 'src/utils/uuidValidate';
-import findUser from 'src/utils/findUser';
+import findRecord from 'src/utils/findRecord';
 
 @Injectable()
 export class UserService {
@@ -31,7 +31,7 @@ export class UserService {
 
   getUser(userId: string) {
     uuidValidate(userId);
-    const user = findUser(userId);
+    const user = findRecord(usersDB, userId);
     return { ...user, password: undefined };
   }
 
@@ -40,26 +40,26 @@ export class UserService {
     if (!(oldPassword && newPassword)) {
       throw new Error('400');
     }
-    const user = findUser(userId);
-    if (user.password !== oldPassword) {
+    const user = findRecord(usersDB, userId);
+    if ((user as IUser).password !== oldPassword) {
       throw new Error('403');
     }
-    user.password = newPassword;
-    user.version = user.version + 1;
-    user.updatedAt = Date.now();
+    (user as IUser).password = newPassword;
+    (user as IUser).version = (user as IUser).version + 1;
+    (user as IUser).updatedAt = Date.now();
     return {
       id: user.id,
-      login: user.login,
-      version: user.version,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      login: (user as IUser).login,
+      version: (user as IUser).version,
+      createdAt: (user as IUser).createdAt,
+      updatedAt: (user as IUser).updatedAt,
     };
   }
 
   deleteUser(userId: string) {
     uuidValidate(userId);
-    const user = findUser(userId);
-    const userIndex = usersDB.indexOf(user);
+    const user = findRecord(usersDB, userId);
+    const userIndex = usersDB.indexOf(user as IUser);
     usersDB.splice(userIndex, 1);
   }
 }
