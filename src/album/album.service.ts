@@ -5,7 +5,7 @@ import albumsDB from 'src/databases/albumsDB';
 import { IAlbum } from 'src/interfaces/IAlbum';
 import { v4 } from 'uuid';
 import uuidValidate from 'src/utils/uuidValidate';
-import findAlbum from 'src/utils/findAlbum';
+import findRecord from 'src/utils/findRecord';
 
 @Injectable()
 export class AlbumService {
@@ -29,7 +29,7 @@ export class AlbumService {
 
   getAlbum(albumId: string) {
     uuidValidate(albumId);
-    const album = findAlbum(albumId);
+    const album = findRecord(albumsDB, albumId);
     return album;
   }
 
@@ -45,17 +45,17 @@ export class AlbumService {
     ) {
       throw new Error('400');
     }
-    const album = findAlbum(albumId);
-    album.name = name;
-    album.year = year;
-    album.artistId = artistId ?? null;
+    const album = findRecord(albumsDB, albumId);
+    (album as IAlbum).name = name;
+    (album as IAlbum).year = year;
+    (album as IAlbum).artistId = artistId ?? null;
     return album;
   }
 
   deleteAlbum(albumId: string) {
     uuidValidate(albumId);
-    const album = findAlbum(albumId);
-    const albumIndex = albumsDB.indexOf(album);
+    const album = findRecord(albumsDB, albumId);
+    const albumIndex = albumsDB.indexOf(album as IAlbum);
     albumsDB.splice(albumIndex, 1);
   }
 }
