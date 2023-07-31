@@ -6,6 +6,8 @@ import { v4 } from 'uuid';
 import { IArtist } from 'src/interfaces/IArtist';
 import uuidValidate from 'src/utils/uuidValidate';
 import findRecord from 'src/utils/findRecord';
+import albumsDB from 'src/databases/albumsDB';
+import tracksDB from 'src/databases/tracksDB';
 
 @Injectable()
 export class ArtistService {
@@ -55,5 +57,13 @@ export class ArtistService {
     const artist = findRecord(artistsDB, artistId);
     const artistIndex = artistsDB.indexOf(artist as IArtist);
     artistsDB.splice(artistIndex, 1);
+    const album = albumsDB.find((album) => album.artistId === artistId);
+    if (album) {
+      album.artistId = null;
+    }
+    const track = tracksDB.find((track) => track.artistId === artistId);
+    if (track) {
+      track.artistId = null;
+    }
   }
 }
