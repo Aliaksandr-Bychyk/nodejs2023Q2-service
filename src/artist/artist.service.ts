@@ -4,8 +4,8 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 import artistsDB from 'src/databases/artistsDB';
 import { v4 } from 'uuid';
 import { IArtist } from 'src/interfaces/IArtist';
-import findArtist from 'src/utils/findArtist';
 import uuidValidate from 'src/utils/uuidValidate';
+import findRecord from 'src/utils/findRecord';
 
 @Injectable()
 export class ArtistService {
@@ -28,7 +28,7 @@ export class ArtistService {
 
   getArtist(artistId: string) {
     uuidValidate(artistId);
-    const artist = findArtist(artistId);
+    const artist = findRecord(artistsDB, artistId);
     return artist;
   }
 
@@ -44,16 +44,16 @@ export class ArtistService {
     ) {
       throw new Error('400');
     }
-    const artist = findArtist(artistId);
-    artist.name = name;
-    artist.grammy = grammy;
+    const artist = findRecord(artistsDB, artistId);
+    (artist as IArtist).name = name;
+    (artist as IArtist).grammy = grammy;
     return artist;
   }
 
   deleteArtist(artistId: string) {
     uuidValidate(artistId);
-    const artist = findArtist(artistId);
-    const artistIndex = artistsDB.indexOf(artist);
+    const artist = findRecord(artistsDB, artistId);
+    const artistIndex = artistsDB.indexOf(artist as IArtist);
     artistsDB.splice(artistIndex, 1);
   }
 }
