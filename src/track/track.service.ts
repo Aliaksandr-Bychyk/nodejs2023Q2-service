@@ -6,6 +6,7 @@ import { ITrack } from 'src/interfaces/ITrack';
 import { v4 } from 'uuid';
 import uuidValidate from 'src/utils/uuidValidate';
 import findRecord from 'src/utils/findRecord';
+import favoritesDB from 'src/databases/favoritesDB';
 
 @Injectable()
 export class TrackService {
@@ -62,5 +63,7 @@ export class TrackService {
     const track = findRecord(tracksDB, trackId);
     const trackIndex = tracksDB.indexOf(track as ITrack);
     tracksDB.splice(trackIndex, 1);
+    const trackFavsIndex = favoritesDB.tracks.indexOf(track as ITrack);
+    favoritesDB.tracks.splice(trackFavsIndex, 1);
   }
 }

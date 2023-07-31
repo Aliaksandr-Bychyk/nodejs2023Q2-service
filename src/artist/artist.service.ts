@@ -8,6 +8,7 @@ import uuidValidate from 'src/utils/uuidValidate';
 import findRecord from 'src/utils/findRecord';
 import albumsDB from 'src/databases/albumsDB';
 import tracksDB from 'src/databases/tracksDB';
+import favoritesDB from 'src/databases/favoritesDB';
 
 @Injectable()
 export class ArtistService {
@@ -65,5 +66,7 @@ export class ArtistService {
     if (track) {
       track.artistId = null;
     }
+    const artistFavsIndex = favoritesDB.artists.indexOf(artist as IArtist);
+    favoritesDB.artists.splice(artistFavsIndex, 1);
   }
 }

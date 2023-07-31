@@ -7,6 +7,7 @@ import { v4 } from 'uuid';
 import uuidValidate from 'src/utils/uuidValidate';
 import findRecord from 'src/utils/findRecord';
 import tracksDB from 'src/databases/tracksDB';
+import favoritesDB from 'src/databases/favoritesDB';
 
 @Injectable()
 export class AlbumService {
@@ -62,5 +63,7 @@ export class AlbumService {
     if (track) {
       track.albumId = null;
     }
+    const albumFavsIndex = favoritesDB.albums.indexOf(album as IAlbum);
+    favoritesDB.albums.splice(albumFavsIndex, 1);
   }
 }
