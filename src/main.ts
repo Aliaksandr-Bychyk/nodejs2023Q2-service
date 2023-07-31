@@ -9,6 +9,10 @@ import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { TrackModule } from './track/track.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { config } from 'dotenv';
+
+config();
+const port = process.env.PORT || 4000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -29,8 +33,8 @@ async function bootstrap() {
 
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(4000);
-  console.log('Server starts at http://localhost:4000');
-  console.log('Docs at http://localhost:4000/docs');
+  await app.listen(port);
+  console.log(`Server starts at http://localhost:${port}`);
+  console.log(`Docs at http://localhost:${port}/docs`);
 }
 bootstrap();
