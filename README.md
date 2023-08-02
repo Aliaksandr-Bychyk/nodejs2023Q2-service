@@ -16,6 +16,10 @@ git clone {repository URL}
 ```
 npm install
 ```
+Or
+```
+npm install --legacy-peer-deps
+```
 
 ## Running application
 
