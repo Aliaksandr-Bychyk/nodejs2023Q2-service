@@ -18,7 +18,12 @@
     "test:auth": "cross-env TEST_MODE=auth jest --config ./test/jest-e2e.json --noStackTrace --runInBand",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "docker:build": "docker build . -t rsschool/node",
+    "docker:run": "docker run -p 49160:4000 rsschool/node",
+    "docker:runcold": "docker run -p 49160:4000 nodejs2023q2-service-app",
+    "docker:runc": "docker-compose up",
+    "docker:buildc": "docker-compose build"
   },
   "dependencies": {
     "@nestjs/common": "^10.1.3",
