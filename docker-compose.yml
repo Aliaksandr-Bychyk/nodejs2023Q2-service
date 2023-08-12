@@ -6,6 +6,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "${PORT}:${PORT}"
-    environment: 
-      - PORT=${PORT} 
-    restart: on-failure
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+    restart: always
+    command: npm run start:dev
