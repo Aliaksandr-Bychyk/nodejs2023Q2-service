@@ -5,7 +5,7 @@ import artistsDB from 'src/databases/artistsDB';
 import { v4 } from 'uuid';
 import { IArtist } from 'src/interfaces/IArtist';
 import uuidValidate from 'src/utils/uuidValidate';
-import findRecord from 'src/utils/findRecord';
+import findRecordLegacy from 'src/utils/findRecordLegacy';
 import albumsDB from 'src/databases/albumsDB';
 import tracksDB from 'src/databases/tracksDB';
 import favoritesDB from 'src/databases/favoritesDB';
@@ -31,7 +31,7 @@ export class ArtistService {
 
   getArtist(artistId: string) {
     uuidValidate(artistId);
-    const artist = findRecord(artistsDB, artistId);
+    const artist = findRecordLegacy(artistsDB, artistId);
     return artist;
   }
 
@@ -47,7 +47,7 @@ export class ArtistService {
     ) {
       throw new Error('400');
     }
-    const artist = findRecord(artistsDB, artistId);
+    const artist = findRecordLegacy(artistsDB, artistId);
     (artist as IArtist).name = name;
     (artist as IArtist).grammy = grammy;
     return artist;
@@ -55,7 +55,7 @@ export class ArtistService {
 
   deleteArtist(artistId: string) {
     uuidValidate(artistId);
-    const artist = findRecord(artistsDB, artistId);
+    const artist = findRecordLegacy(artistsDB, artistId);
     const artistIndex = artistsDB.indexOf(artist as IArtist);
     artistsDB.splice(artistIndex, 1);
     const album = albumsDB.find((album) => album.artistId === artistId);

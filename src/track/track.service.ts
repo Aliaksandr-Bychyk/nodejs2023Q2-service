@@ -5,7 +5,7 @@ import tracksDB from 'src/databases/tracksDB';
 import { ITrack } from 'src/interfaces/ITrack';
 import { v4 } from 'uuid';
 import uuidValidate from 'src/utils/uuidValidate';
-import findRecord from 'src/utils/findRecord';
+import findRecordLegacy from 'src/utils/findRecordLegacy';
 import favoritesDB from 'src/databases/favoritesDB';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class TrackService {
 
   getTrack(trackId: string) {
     uuidValidate(trackId);
-    const track = findRecord(tracksDB, trackId);
+    const track = findRecordLegacy(tracksDB, trackId);
     return track;
   }
 
@@ -50,7 +50,7 @@ export class TrackService {
     ) {
       throw new Error('400');
     }
-    const track = findRecord(tracksDB, trackId);
+    const track = findRecordLegacy(tracksDB, trackId);
     (track as ITrack).name = name;
     (track as ITrack).artistId = artistId ?? null;
     (track as ITrack).albumId = albumId ?? null;
@@ -60,7 +60,7 @@ export class TrackService {
 
   deleteTrack(trackId: string) {
     uuidValidate(trackId);
-    const track = findRecord(tracksDB, trackId);
+    const track = findRecordLegacy(tracksDB, trackId);
     const trackIndex = tracksDB.indexOf(track as ITrack);
     tracksDB.splice(trackIndex, 1);
     const trackFavsIndex = favoritesDB.tracks.indexOf(track as ITrack);

@@ -4,7 +4,7 @@ import artistsDB from 'src/databases/artistsDB';
 import favoritesDB from 'src/databases/favoritesDB';
 import tracksDB from 'src/databases/tracksDB';
 import { IDatabase } from 'src/interfaces/IDatabase';
-import findRecord from 'src/utils/findRecord';
+import findRecordLegacy from 'src/utils/findRecordLegacy';
 import uuidValidate from 'src/utils/uuidValidate';
 
 @Injectable()
@@ -39,13 +39,13 @@ export class FavoritesService {
 
   postFavorites(id: string, database: IDatabase[], type: string) {
     uuidValidate(id);
-    const record = findRecord(database, id, '422');
+    const record = findRecordLegacy(database, id, '422');
     favoritesDB[type].push(record);
   }
 
   deleteFavorites(id: string, type: string) {
     uuidValidate(id);
-    const record = findRecord(favoritesDB[type], id);
+    const record = findRecordLegacy(favoritesDB[type], id);
     const recordIndex = favoritesDB[type].indexOf(record);
     favoritesDB[type].splice(recordIndex, 1);
   }
