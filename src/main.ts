@@ -17,7 +17,7 @@ const port = process.env.PORT || 4000;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const apiPath = join(__dirname, '..', 'doc/api.yaml');
+  const apiPath = join(__dirname, '../..', 'doc/api.yaml');
   const apiYaml = await readFile(apiPath, 'utf-8');
 
   const config: OpenAPIObject = load(apiYaml) as OpenAPIObject;

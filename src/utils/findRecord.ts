@@ -1,7 +1,16 @@
-import { IDatabase } from 'src/interfaces/IDatabase';
+import { PrismaService } from 'src/prisma.service';
 
-const findRecord = (database: IDatabase[], id: string, errorCode?: string) => {
-  const record = database.find((record) => record.id === id);
+const findRecord = async (
+  prisma: PrismaService,
+  id: string,
+  model: string,
+  errorCode?: string,
+) => {
+  const record = await prisma[model].findUnique({
+    where: {
+      id: String(id),
+    },
+  });
   if (!record) {
     throw new Error(errorCode ?? '404');
   }

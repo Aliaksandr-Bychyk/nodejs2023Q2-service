@@ -47,9 +47,9 @@ export class UserController {
     description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(200)
-  getUsers() {
+  async getUsers() {
     try {
-      return this.userService.getUsers();
+      return await this.userService.getUsers();
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -102,9 +102,9 @@ export class UserController {
     description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(201)
-  postUser(@Body() createUserDto: CreateUserDto) {
+  async postUser(@Body() createUserDto: CreateUserDto) {
     try {
-      return this.userService.postUser(createUserDto);
+      return await this.userService.postUser(createUserDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -139,9 +139,9 @@ export class UserController {
     description: 'User not found',
   })
   @HttpCode(200)
-  getUser(@Param('userId') userId: string) {
+  async getUser(@Param('userId') userId: string) {
     try {
-      return this.userService.getUser(userId);
+      return await this.userService.getUser(userId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -225,12 +225,12 @@ export class UserController {
     description: 'User not found',
   })
   @HttpCode(200)
-  putUser(
+  async putUser(
     @Param('userId') userId: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
     try {
-      return this.userService.putUser(userId, updateUserDto);
+      return await this.userService.putUser(userId, updateUserDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -258,9 +258,9 @@ export class UserController {
     description: 'User not found',
   })
   @HttpCode(204)
-  deleteUser(@Param('userId') userId: string) {
+  async deleteUser(@Param('userId') userId: string) {
     try {
-      this.userService.deleteUser(userId);
+      await this.userService.deleteUser(userId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
