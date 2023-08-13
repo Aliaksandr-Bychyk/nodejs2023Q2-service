@@ -5,6 +5,8 @@ const user = {
   login: 'Aliaksandr',
   password: 'admin',
   version: 1,
+  createdAt: 1690717233,
+  updatedAt: 1690717233,
 };
 const artist = {
   id: '8a3c8a2c-2fd9-4928-9e3e-6e09c6e88247',
