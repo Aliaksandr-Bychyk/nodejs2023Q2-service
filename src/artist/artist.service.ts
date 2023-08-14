@@ -1,22 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import artistsDB from 'src/databases/artistsDB';
 import { v4 } from 'uuid';
 import { IArtist } from 'src/interfaces/IArtist';
 import uuidValidate from 'src/utils/uuidValidate';
-import findRecordLegacy from 'src/utils/findRecordLegacy';
-import albumsDB from 'src/databases/albumsDB';
-import tracksDB from 'src/databases/tracksDB';
-import favoritesDB from 'src/databases/favoritesDB';
+import findRecord from 'src/utils/findRecord';
+// import albumsDB from 'src/databases/albumsDB';
+// import tracksDB from 'src/databases/tracksDB';
+// import favoritesDB from 'src/databases/favoritesDB';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ArtistService {
-  getArtists() {
-    return artistsDB;
+  constructor(private prisma: PrismaService) {}
+
+  async getArtists() {
+    return await this.prisma.artists.findMany();
   }
 
-  postArtist({ name, grammy }: CreateArtistDto) {
+  async postArtist({ name, grammy }: CreateArtistDto) {
     if (!(name && grammy !== undefined)) {
       throw new Error('400');
     }
@@ -25,17 +27,18 @@ export class ArtistService {
       name,
       grammy,
     };
-    artistsDB.push(newArtist);
-    return newArtist;
+    return await this.prisma.artists.create({
+      data: newArtist,
+    });
   }
 
-  getArtist(artistId: string) {
+  async getArtist(artistId: string) {
     uuidValidate(artistId);
-    const artist = findRecordLegacy(artistsDB, artistId);
+    const artist = await findRecord(this.prisma, artistId, 'artists');
     return artist;
   }
 
-  putArtist(artistId: string, { name, grammy }: UpdateArtistDto) {
+  async putArtist(artistId: string, { name, grammy }: UpdateArtistDto) {
     uuidValidate(artistId);
     if (
       !(
@@ -47,26 +50,36 @@ export class ArtistService {
     ) {
       throw new Error('400');
     }
-    const artist = findRecordLegacy(artistsDB, artistId);
-    (artist as IArtist).name = name;
-    (artist as IArtist).grammy = grammy;
-    return artist;
+    await findRecord(this.prisma, artistId, 'artists');
+    return await this.prisma.artists.update({
+      where: {
+        id: artistId,
+      },
+      data: {
+        name,
+        grammy,
+      },
+    });
   }
 
-  deleteArtist(artistId: string) {
+  async deleteArtist(artistId: string) {
     uuidValidate(artistId);
-    const artist = findRecordLegacy(artistsDB, artistId);
-    const artistIndex = artistsDB.indexOf(artist as IArtist);
-    artistsDB.splice(artistIndex, 1);
-    const album = albumsDB.find((album) => album.artistId === artistId);
-    if (album) {
-      album.artistId = null;
-    }
-    const track = tracksDB.find((track) => track.artistId === artistId);
-    if (track) {
-      track.artistId = null;
-    }
-    const artistFavsIndex = favoritesDB.artists.indexOf(artist as IArtist);
-    favoritesDB.artists.splice(artistFavsIndex, 1);
+    await findRecord(this.prisma, artistId, 'artists');
+    await findRecord(this.prisma, artistId, 'artists');
+    await this.prisma.artists.delete({
+      where: {
+        id: artistId,
+      },
+    });
+    // const album = albumsDB.find((album) => album.artistId === artistId);
+    // if (album) {
+    //   album.artistId = null;
+    // }
+    // const track = tracksDB.find((track) => track.artistId === artistId);
+    // if (track) {
+    //   track.artistId = null;
+    // }
+    // const artistFavsIndex = favoritesDB.artists.indexOf(artist as IArtist);
+    // favoritesDB.artists.splice(artistFavsIndex, 1);
   }
 }

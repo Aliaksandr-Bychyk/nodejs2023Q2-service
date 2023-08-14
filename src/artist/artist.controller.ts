@@ -48,9 +48,9 @@ export class ArtistController {
     description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(200)
-  getArtists() {
+  async getArtists() {
     try {
-      return this.artistService.getArtists();
+      return await this.artistService.getArtists();
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -100,9 +100,9 @@ export class ArtistController {
     description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(201)
-  postArtist(@Body() createArtistDto: CreateArtistDto) {
+  async postArtist(@Body() createArtistDto: CreateArtistDto) {
     try {
-      return this.artistService.postArtist(createArtistDto);
+      return await this.artistService.postArtist(createArtistDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -138,9 +138,9 @@ export class ArtistController {
     description: 'Artist was not found.',
   })
   @HttpCode(200)
-  getArtist(@Param('artistId') artistId: string) {
+  async getArtist(@Param('artistId') artistId: string) {
     try {
-      return this.artistService.getArtist(artistId);
+      return await this.artistService.getArtist(artistId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -193,12 +193,12 @@ export class ArtistController {
     description: 'Artist was not found.',
   })
   @HttpCode(200)
-  putArtist(
+  async putArtist(
     @Param('artistId') artistId: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
     try {
-      return this.artistService.putArtist(artistId, updateArtistDto);
+      return await this.artistService.putArtist(artistId, updateArtistDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -227,9 +227,9 @@ export class ArtistController {
     description: 'Artist was not found.',
   })
   @HttpCode(204)
-  deleteArtist(@Param('artistId') artistId: string) {
+  async deleteArtist(@Param('artistId') artistId: string) {
     try {
-      return this.artistService.deleteArtist(artistId);
+      return await this.artistService.deleteArtist(artistId);
     } catch (error) {
       exceptionHandler(error as Error);
     }

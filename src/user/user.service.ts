@@ -81,7 +81,7 @@ export class UserService {
     await findRecord(this.prisma, userId, 'users');
     await this.prisma.users.delete({
       where: {
-        id: String(userId),
+        id: userId,
       },
     });
   }
