@@ -34,8 +34,7 @@ export class ArtistService {
 
   async getArtist(artistId: string) {
     uuidValidate(artistId);
-    const artist = await findRecord(this.prisma, artistId, 'artists');
-    return artist;
+    return await findRecord(this.prisma, artistId, 'artists');
   }
 
   async putArtist(artistId: string, { name, grammy }: UpdateArtistDto) {
@@ -64,7 +63,6 @@ export class ArtistService {
 
   async deleteArtist(artistId: string) {
     uuidValidate(artistId);
-    await findRecord(this.prisma, artistId, 'artists');
     await findRecord(this.prisma, artistId, 'artists');
     await this.prisma.artists.delete({
       where: {
