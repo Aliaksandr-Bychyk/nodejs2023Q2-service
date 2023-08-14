@@ -27,7 +27,7 @@ services:
       POSTGRES_USER: $PG_DB_USERNAME
       POSTGRES_PASSWORD: $PG_DB_PASSWORD
     ports:
-      - ${PG_DB_PORT}:5432
+      - ${PG_DB_PORT}:${PG_DB_PORT}
     volumes:
       - ./postgres:/var/lib/postgresql/data
       - ./logs:/logs
