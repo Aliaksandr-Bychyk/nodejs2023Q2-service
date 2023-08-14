@@ -3,11 +3,12 @@ import { config } from 'dotenv';
 
 config();
 
-const user = process.env.POSTGRES_USER || 'postgres';
-const host = process.env.POSTGRES_HOST || 'localhost';
-const database = process.env.POSTGRES_DATABASE || 'postgres';
-const password = process.env.POSTGRES_PASSWORD || 'admin';
-const port = +process.env.POSTGRES_PORT || 5432;
+const user = process.env.PG_DB_USERNAME || 'postgres';
+const host = process.env.PG_HOST || 'localhost';
+const database = 'postgres';
+const password = process.env.PG_DB_PASSWORD || 'admin';
+const port = +process.env.PG_DB_PORT || 5432;
+const databaseName = process.env.PG_DB_NAME || 'homelibrary';
 
 const dbParams = {
   user,
@@ -16,8 +17,6 @@ const dbParams = {
   password,
   port,
 };
-
-const databaseName = 'homelibrary';
 
 (async () => {
   const client = new Client(dbParams);
