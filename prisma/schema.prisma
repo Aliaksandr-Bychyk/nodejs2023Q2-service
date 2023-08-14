@@ -17,38 +17,46 @@ model Users {
 }
 
 model Artists {
-  id        String      @id @default(uuid())
-  name      String
-  grammy    Boolean
-  albums    Albums[]
-  tracks    Tracks[]
-  favorites Favorites[] @relation("FavoritesArtists")
+  id              String            @id @default(uuid())
+  name            String
+  grammy          Boolean
+  albums          Albums[]
+  tracks          Tracks[]
+  FavoriteArtists FavoriteArtists[]
 }
 
 model Albums {
-  id        String      @id @default(uuid())
-  name      String
-  year      Int
-  artist    Artists?    @relation(fields: [artistId], references: [id], onDelete: SetNull)
-  artistId  String?
-  tracks    Tracks[]
-  favorites Favorites[] @relation("FavoritesAlbums")
+  id             String           @id @default(uuid())
+  name           String
+  year           Int
+  artist         Artists?         @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  artistId       String?
+  tracks         Tracks[]
+  FavoriteAlbums FavoriteAlbums[]
 }
 
 model Tracks {
-  id        String      @id @default(uuid())
-  name      String
-  artist    Artists?    @relation(fields: [artistId], references: [id], onDelete: SetNull)
-  artistId  String?
-  album     Albums?     @relation(fields: [albumId], references: [id], onDelete: SetNull)
-  albumId   String?
-  duration  Int
-  favorites Favorites[] @relation("FavoritesTracks")
+  id             String           @id @default(uuid())
+  name           String
+  artist         Artists?         @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  artistId       String?
+  album          Albums?          @relation(fields: [albumId], references: [id], onDelete: SetNull)
+  albumId        String?
+  duration       Int
+  FavoriteTracks FavoriteTracks[]
 }
 
-model Favorites {
-  id      String    @id @default(uuid())
-  artists Artists[] @relation("FavoritesArtists")
-  albums  Albums[]  @relation("FavoritesAlbums")
-  tracks  Tracks[]  @relation("FavoritesTracks")
+model FavoriteArtists {
+  artistsId String  @id
+  artists   Artists @relation(fields: [artistsId], references: [id])
+}
+
+model FavoriteAlbums {
+  albumsId String @id
+  albums   Albums @relation(fields: [albumsId], references: [id])
+}
+
+model FavoriteTracks {
+  tracksId String @id
+  tracks   Tracks @relation(fields: [tracksId], references: [id])
 }

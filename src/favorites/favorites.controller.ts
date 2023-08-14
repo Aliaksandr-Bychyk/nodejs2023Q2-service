@@ -37,9 +37,9 @@ export class FavoritesController {
     description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(200)
-  getFavorites() {
+  async getFavorites() {
     try {
-      return this.favoritesService.getFavorites();
+      return await this.favoritesService.getFavorites();
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -68,9 +68,9 @@ export class FavoritesController {
     description: "Track with id doesn't exist.",
   })
   @HttpCode(201)
-  postFavoritesTrack(@Param('trackId') trackId: string) {
+  async postFavoritesTrack(@Param('trackId') trackId: string) {
     try {
-      return this.favoritesService.postFavoritesTrack(trackId);
+      return await this.favoritesService.postFavoritesTrack(trackId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -99,9 +99,9 @@ export class FavoritesController {
     description: 'Track was not found',
   })
   @HttpCode(204)
-  deleteFavoritesTrack(@Param('trackId') trackId: string) {
+  async deleteFavoritesTrack(@Param('trackId') trackId: string) {
     try {
-      return this.favoritesService.deleteFavoritesTrack(trackId);
+      return await this.favoritesService.deleteFavoritesTrack(trackId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -130,9 +130,9 @@ export class FavoritesController {
     description: "Album with id doesn't exist.",
   })
   @HttpCode(201)
-  postFavoritesAlbum(@Param('albumId') albumId: string) {
+  async postFavoritesAlbum(@Param('albumId') albumId: string) {
     try {
-      return this.favoritesService.postFavoritesAlbum(albumId);
+      return await this.favoritesService.postFavoritesAlbum(albumId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -161,9 +161,9 @@ export class FavoritesController {
     description: 'Album was not found',
   })
   @HttpCode(204)
-  deleteFavoritesAlbum(@Param('albumId') albumId: string) {
+  async deleteFavoritesAlbum(@Param('albumId') albumId: string) {
     try {
-      return this.favoritesService.deleteFavoritesAlbum(albumId);
+      return await this.favoritesService.deleteFavoritesAlbum(albumId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -192,9 +192,9 @@ export class FavoritesController {
     description: "Artist with id doesn't exist.",
   })
   @HttpCode(201)
-  postFavoritesArtist(@Param('artistId') artistId: string) {
+  async postFavoritesArtist(@Param('artistId') artistId: string) {
     try {
-      return this.favoritesService.postFavoritesArtist(artistId);
+      return await this.favoritesService.postFavoritesArtist(artistId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -223,9 +223,9 @@ export class FavoritesController {
     description: 'Artist was not found',
   })
   @HttpCode(204)
-  deleteFavoritesArtist(@Param('artistId') artistId: string) {
+  async deleteFavoritesArtist(@Param('artistId') artistId: string) {
     try {
-      return this.favoritesService.deleteFavoritesArtist(artistId);
+      return await this.favoritesService.deleteFavoritesArtist(artistId);
     } catch (error) {
       exceptionHandler(error as Error);
     }

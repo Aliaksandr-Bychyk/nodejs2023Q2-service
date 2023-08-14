@@ -1,52 +1,119 @@
 import { Injectable } from '@nestjs/common';
-import albumsDB from 'src/databases/albumsDB';
-import artistsDB from 'src/databases/artistsDB';
-import favoritesDB from 'src/databases/favoritesDB';
-import tracksDB from 'src/databases/tracksDB';
-import { IDatabase } from 'src/interfaces/IDatabase';
-import findRecordLegacy from 'src/utils/findRecordLegacy';
+import { PrismaService } from 'src/prisma.service';
+import findRecord from 'src/utils/findRecord';
 import uuidValidate from 'src/utils/uuidValidate';
 
 @Injectable()
 export class FavoritesService {
-  getFavorites() {
-    return favoritesDB;
+  constructor(private prisma: PrismaService) {}
+
+  async getFavorites() {
+    return {
+      artists: (
+        await this.prisma.favoriteArtists.findMany({
+          select: {
+            artists: true,
+          },
+        })
+      ).map((artist) => artist.artists),
+      albums: (
+        await this.prisma.favoriteAlbums.findMany({
+          select: {
+            albums: true,
+          },
+        })
+      ).map((album) => album.albums),
+      tracks: (
+        await this.prisma.favoriteTracks.findMany({
+          select: {
+            tracks: true,
+          },
+        })
+      ).map((track) => track.tracks),
+    };
   }
 
-  postFavoritesTrack(trackId: string) {
-    this.postFavorites(trackId, tracksDB, 'tracks');
+  async postFavoritesTrack(trackId: string) {
+    await this.postFavorites(trackId, this.prisma, 'tracks', 'favoriteTracks');
   }
 
-  deleteFavoritesTrack(trackId: string) {
-    this.deleteFavorites(trackId, 'tracks');
+  async deleteFavoritesTrack(trackId: string) {
+    await this.deleteFavorites(
+      trackId,
+      this.prisma,
+      'tracks',
+      'favoriteTracks',
+    );
   }
 
-  postFavoritesAlbum(albumId: string) {
-    this.postFavorites(albumId, albumsDB, 'albums');
+  async postFavoritesAlbum(albumId: string) {
+    await this.postFavorites(albumId, this.prisma, 'albums', 'favoriteAlbums');
   }
 
-  deleteFavoritesAlbum(albumId: string) {
-    this.deleteFavorites(albumId, 'albums');
+  async deleteFavoritesAlbum(albumId: string) {
+    await this.deleteFavorites(
+      albumId,
+      this.prisma,
+      'albums',
+      'favoriteAlbums',
+    );
   }
 
-  postFavoritesArtist(artistId: string) {
-    this.postFavorites(artistId, artistsDB, 'artists');
+  async postFavoritesArtist(artistId: string) {
+    await this.postFavorites(
+      artistId,
+      this.prisma,
+      'artists',
+      'favoriteArtists',
+    );
   }
 
-  deleteFavoritesArtist(artistId: string) {
-    this.deleteFavorites(artistId, 'artists');
+  async deleteFavoritesArtist(artistId: string) {
+    await this.deleteFavorites(
+      artistId,
+      this.prisma,
+      'artists',
+      'favoriteArtists',
+    );
   }
 
-  postFavorites(id: string, database: IDatabase[], type: string) {
+  async postFavorites(
+    id: string,
+    prisma: PrismaService,
+    model: string,
+    type: string,
+  ) {
     uuidValidate(id);
-    const record = findRecordLegacy(database, id, '422');
-    favoritesDB[type].push(record);
+    const record = await findRecord(prisma, id, model);
+    const nameId = [
+      ['tracks', 'tracksId'],
+      ['artists', 'artistsId'],
+      ['albums', 'albumsId'],
+    ].find((el) => el[0] === model)[1];
+    await prisma[type].create({
+      data: {
+        [nameId]: record.id,
+      },
+    });
   }
 
-  deleteFavorites(id: string, type: string) {
+  async deleteFavorites(
+    id: string,
+    prisma: PrismaService,
+    model: string,
+    type: string,
+  ) {
     uuidValidate(id);
-    const record = findRecordLegacy(favoritesDB[type], id);
-    const recordIndex = favoritesDB[type].indexOf(record);
-    favoritesDB[type].splice(recordIndex, 1);
+    await findRecord(prisma, id, model);
+    const nameId = [
+      ['tracks', 'tracksId'],
+      ['artists', 'artistsId'],
+      ['albums', 'albumsId'],
+    ].find((el) => el[0] === model)[1];
+    await prisma[type].delete({
+      where: {
+        [nameId]: id,
+      },
+    });
   }
 }
