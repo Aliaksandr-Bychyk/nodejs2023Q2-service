@@ -1,13 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-// import albumsDB from 'src/databases/albumsDB';
 import { IAlbum } from 'src/interfaces/IAlbum';
 import { v4 } from 'uuid';
 import uuidValidate from 'src/utils/uuidValidate';
-// import findRecordLegacy from 'src/utils/findRecordLegacy';
-// import tracksDB from 'src/databases/tracksDB';
-// import favoritesDB from 'src/databases/favoritesDB';
 import { PrismaService } from 'src/prisma.service';
 import findRecord from 'src/utils/findRecord';
 
@@ -72,11 +68,10 @@ export class AlbumService {
         id: albumId,
       },
     });
-    // const track = tracksDB.find((track) => track.albumId === albumId);
-    // if (track) {
-    //   track.albumId = null;
-    // }
-    // const albumFavsIndex = favoritesDB.albums.indexOf(album as IAlbum);
-    // favoritesDB.albums.splice(albumFavsIndex, 1);
+    this.prisma.favoriteAlbums.delete({
+      where: {
+        albumId,
+      },
+    });
   }
 }

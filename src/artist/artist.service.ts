@@ -5,9 +5,6 @@ import { v4 } from 'uuid';
 import { IArtist } from 'src/interfaces/IArtist';
 import uuidValidate from 'src/utils/uuidValidate';
 import findRecord from 'src/utils/findRecord';
-// import albumsDB from 'src/databases/albumsDB';
-// import tracksDB from 'src/databases/tracksDB';
-// import favoritesDB from 'src/databases/favoritesDB';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -69,15 +66,10 @@ export class ArtistService {
         id: artistId,
       },
     });
-    // const album = albumsDB.find((album) => album.artistId === artistId);
-    // if (album) {
-    //   album.artistId = null;
-    // }
-    // const track = tracksDB.find((track) => track.artistId === artistId);
-    // if (track) {
-    //   track.artistId = null;
-    // }
-    // const artistFavsIndex = favoritesDB.artists.indexOf(artist as IArtist);
-    // favoritesDB.artists.splice(artistFavsIndex, 1);
+    this.prisma.favoriteArtists.delete({
+      where: {
+        artistId,
+      },
+    });
   }
 }

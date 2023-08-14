@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-// import tracksDB from 'src/databases/tracksDB';
 import { ITrack } from 'src/interfaces/ITrack';
 import { v4 } from 'uuid';
 import uuidValidate from 'src/utils/uuidValidate';
-// import findRecordLegacy from 'src/utils/findRecordLegacy';
-// import favoritesDB from 'src/databases/favoritesDB';
 import { PrismaService } from 'src/prisma.service';
 import findRecord from 'src/utils/findRecord';
 
@@ -76,7 +73,10 @@ export class TrackService {
         id: trackId,
       },
     });
-    // const trackFavsIndex = favoritesDB.tracks.indexOf(track as ITrack);
-    // favoritesDB.tracks.splice(trackFavsIndex, 1);
+    this.prisma.favoriteTracks.delete({
+      where: {
+        trackId,
+      },
+    });
   }
 }
