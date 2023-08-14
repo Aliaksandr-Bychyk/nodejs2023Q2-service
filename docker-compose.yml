@@ -1,6 +1,10 @@
-version: '3'
+version: "3.8"
 services:
+
   app:
+    depends_on:
+      - database
+    container_name: nodejs2023Q2-service-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,4 +15,27 @@ services:
     volumes:
       - ./src:/app/src
     restart: always
-    command: npm run start:dev
+    networks:
+      - service_network
+    command: npm run docker
+
+  database:
+    container_name: nodejs2023Q2-service-database
+    image: postgres:15.4-alpine3.18
+    restart: always
+    environment:
+      POSTGRES_DB: $PG_DB_NAME
+      POSTGRES_USER: $PG_DB_USERNAME
+      POSTGRES_PASSWORD: $PG_DB_PASSWORD
+    ports:
+      - ${PG_DB_PORT}:5432
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    networks:
+      - service_network
+    
+volumes:
+  postgres:
+
+networks:
+  service_network:

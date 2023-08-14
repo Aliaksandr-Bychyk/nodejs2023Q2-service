@@ -21,11 +21,12 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "docker:build": "docker build . -t rsschool/node",
     "docker:run": "docker run -p 49160:4000 rsschool/node",
-    "docker:runc": "docker-compose up -d",
+    "docker:runc": "docker-compose up -d --force-recreate",
     "docker:buildc": "docker-compose build",
     "database:create": "ts-node prisma/initDatabase.ts",
     "database:init": "npx prisma migrate dev --name init",
-    "database:seed": "npx prisma db seed"
+    "database:seed": "npx prisma db seed",
+    "docker": "npx prisma generate && npx prisma migrate deploy && nest start --watch"
   },
   "dependencies": {
     "@nestjs/common": "^10.1.3",
@@ -78,6 +79,7 @@
     "typescript": "^4.3.5"
   },
   "prisma": {
+    "schema": "./prisma/schema.prisma",
     "seed": "ts-node prisma/seed.ts"
   },
   "jest": {

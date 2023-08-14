@@ -2,4 +2,10 @@ node_modules
 dist
 npm-debug.log
 .git
-.env
+Dockerfile.db
+Dockerfile.app
+.dockerignore
+prisma/migrations
+logs
+postgres
+test
