@@ -47,16 +47,16 @@ model Tracks {
 }
 
 model FavoriteArtists {
-  artistsId String  @id
-  artists   Artists @relation(fields: [artistsId], references: [id])
+  artistId String  @id
+  artist   Artists @relation(fields: [artistId], references: [id])
 }
 
 model FavoriteAlbums {
-  albumsId String @id
-  albums   Albums @relation(fields: [albumsId], references: [id])
+  albumId String @id
+  album   Albums @relation(fields: [albumId], references: [id])
 }
 
 model FavoriteTracks {
-  tracksId String @id
-  tracks   Tracks @relation(fields: [tracksId], references: [id])
+  trackId String @id
+  track   Tracks @relation(fields: [trackId], references: [id])
 }

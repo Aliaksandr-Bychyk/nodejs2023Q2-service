@@ -12,24 +12,24 @@ export class FavoritesService {
       artists: (
         await this.prisma.favoriteArtists.findMany({
           select: {
-            artists: true,
+            artist: true,
           },
         })
-      ).map((artist) => artist.artists),
+      ).map((artist) => artist.artist),
       albums: (
         await this.prisma.favoriteAlbums.findMany({
           select: {
-            albums: true,
+            album: true,
           },
         })
-      ).map((album) => album.albums),
+      ).map((album) => album.album),
       tracks: (
         await this.prisma.favoriteTracks.findMany({
           select: {
-            tracks: true,
+            track: true,
           },
         })
-      ).map((track) => track.tracks),
+      ).map((track) => track.track),
     };
   }
 
@@ -86,9 +86,9 @@ export class FavoritesService {
     uuidValidate(id);
     const record = await findRecord(prisma, id, model);
     const nameId = [
-      ['tracks', 'tracksId'],
-      ['artists', 'artistsId'],
-      ['albums', 'albumsId'],
+      ['tracks', 'trackId'],
+      ['artists', 'artistId'],
+      ['albums', 'albumId'],
     ].find((el) => el[0] === model)[1];
     await prisma[type].create({
       data: {
@@ -106,9 +106,9 @@ export class FavoritesService {
     uuidValidate(id);
     await findRecord(prisma, id, model);
     const nameId = [
-      ['tracks', 'tracksId'],
-      ['artists', 'artistsId'],
-      ['albums', 'albumsId'],
+      ['tracks', 'trackId'],
+      ['artists', 'artistId'],
+      ['albums', 'albumId'],
     ].find((el) => el[0] === model)[1];
     await prisma[type].delete({
       where: {
