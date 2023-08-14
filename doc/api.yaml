@@ -4,9 +4,6 @@ info:
   description: Home music library service
   version: 1.0.0
 
-servers:
-  - url: /api
-
 components:
   schemas:
     User:
@@ -189,7 +186,7 @@ paths:
           description: Bad request
         409:
           description: Conflict. Login already exists
-  /users:
+  /user:
     get:
       tags:
         - Users
@@ -239,7 +236,7 @@ paths:
           description: Bad request. body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /users/{userId}:
+  /user/{userId}:
     parameters:
       - name: userId
         in: path
@@ -334,7 +331,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: User not found
-  /tracks:
+  /track:
     get:
       tags:
         - Track
@@ -388,9 +385,9 @@ paths:
           description: Bad request. body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /tracks/{id}:
+  /track/{trackId}:
     parameters:
-      - name: id
+      - name: trackId
         in: path
         required: true
         schema:
@@ -492,7 +489,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Track was not found.
-  /albums:
+  /album:
     get:
       tags:
         - Album
@@ -544,9 +541,9 @@ paths:
           description: Bad request. body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /albums/{id}:
+  /album/{albumId}:
     parameters:
-      - name: id
+      - name: albumId
         in: path
         required: true
         schema:
@@ -621,7 +618,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Album was not found.
-  /artists:
+  /artist:
     get:
       tags:
         - Artist
@@ -668,9 +665,9 @@ paths:
           description: Bad request. body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /artists/{id}:
+  /artist/{artistId}:
     parameters:
-      - name: id
+      - name: artistId
         in: path
         required: true
         schema:
@@ -755,9 +752,9 @@ paths:
                 $ref: '#/components/schemas/Favorites'
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /favs/track/{id}:
+  /favs/track/{trackId}:
     parameters:
-      - name: id
+      - name: trackId
         in: path
         required: true
         schema:
@@ -791,9 +788,9 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Track was not found.
-  /favs/album/{id}:
+  /favs/album/{albumId}:
     parameters:
-      - name: id
+      - name: albumId
         in: path
         required: true
         schema:
@@ -827,9 +824,9 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Album was not found.
-  /favs/artist/{id}:
+  /favs/artist/{artistId}:
     parameters:
-      - name: id
+      - name: artistId
         in: path
         required: true
         schema:
