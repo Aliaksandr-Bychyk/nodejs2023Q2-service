@@ -48,9 +48,9 @@ export class TrackController {
     description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(200)
-  getAlbums() {
+  async getAlbums() {
     try {
-      return this.trackService.getTracks();
+      return await this.trackService.getTracks();
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -109,9 +109,9 @@ export class TrackController {
     description: ResponsesMessages.UnauthorizedError,
   })
   @HttpCode(201)
-  postAlbum(@Body() createTrackDto: CreateTrackDto) {
+  async postAlbum(@Body() createTrackDto: CreateTrackDto) {
     try {
-      return this.trackService.postTrack(createTrackDto);
+      return await this.trackService.postTrack(createTrackDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -147,9 +147,9 @@ export class TrackController {
     description: 'Track was not found.',
   })
   @HttpCode(200)
-  getAlbum(@Param('trackId') trackId: string) {
+  async getAlbum(@Param('trackId') trackId: string) {
     try {
-      return this.trackService.getTrack(trackId);
+      return await this.trackService.getTrack(trackId);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -244,12 +244,12 @@ export class TrackController {
     description: 'Track was not found.',
   })
   @HttpCode(200)
-  putAlbum(
+  async putAlbum(
     @Param('trackId') trackId: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
     try {
-      return this.trackService.putTrack(trackId, updateTrackDto);
+      return await this.trackService.putTrack(trackId, updateTrackDto);
     } catch (error) {
       exceptionHandler(error as Error);
     }
@@ -278,9 +278,9 @@ export class TrackController {
     description: 'Track was not found.',
   })
   @HttpCode(204)
-  deleteAlbum(@Param('trackId') trackId: string) {
+  async deleteAlbum(@Param('trackId') trackId: string) {
     try {
-      return this.trackService.deleteTrack(trackId);
+      return await this.trackService.deleteTrack(trackId);
     } catch (error) {
       exceptionHandler(error as Error);
     }

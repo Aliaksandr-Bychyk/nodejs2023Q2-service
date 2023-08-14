@@ -1,20 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import tracksDB from 'src/databases/tracksDB';
+// import tracksDB from 'src/databases/tracksDB';
 import { ITrack } from 'src/interfaces/ITrack';
 import { v4 } from 'uuid';
 import uuidValidate from 'src/utils/uuidValidate';
-import findRecordLegacy from 'src/utils/findRecordLegacy';
-import favoritesDB from 'src/databases/favoritesDB';
+// import findRecordLegacy from 'src/utils/findRecordLegacy';
+// import favoritesDB from 'src/databases/favoritesDB';
+import { PrismaService } from 'src/prisma.service';
+import findRecord from 'src/utils/findRecord';
 
 @Injectable()
 export class TrackService {
-  getTracks() {
-    return tracksDB;
+  constructor(private prisma: PrismaService) {}
+
+  async getTracks() {
+    return await this.prisma.tracks.findMany();
   }
 
-  postTrack({ name, artistId, albumId, duration }: CreateTrackDto) {
+  async postTrack({ name, artistId, albumId, duration }: CreateTrackDto) {
     if (!(name && duration !== undefined)) {
       throw new Error('400');
     }
@@ -25,17 +29,17 @@ export class TrackService {
       albumId: albumId ?? null,
       duration,
     };
-    tracksDB.push(newTrack);
-    return newTrack;
+    return await this.prisma.tracks.create({
+      data: newTrack,
+    });
   }
 
-  getTrack(trackId: string) {
+  async getTrack(trackId: string) {
     uuidValidate(trackId);
-    const track = findRecordLegacy(tracksDB, trackId);
-    return track;
+    return await findRecord(this.prisma, trackId, 'tracks');
   }
 
-  putTrack(
+  async putTrack(
     trackId: string,
     { name, artistId, albumId, duration }: UpdateTrackDto,
   ) {
@@ -50,20 +54,29 @@ export class TrackService {
     ) {
       throw new Error('400');
     }
-    const track = findRecordLegacy(tracksDB, trackId);
-    (track as ITrack).name = name;
-    (track as ITrack).artistId = artistId ?? null;
-    (track as ITrack).albumId = albumId ?? null;
-    (track as ITrack).duration = duration;
-    return track;
+    await findRecord(this.prisma, trackId, 'tracks');
+    return await this.prisma.tracks.update({
+      where: {
+        id: trackId,
+      },
+      data: {
+        name,
+        artistId: artistId ?? null,
+        albumId: albumId ?? null,
+        duration,
+      },
+    });
   }
 
-  deleteTrack(trackId: string) {
+  async deleteTrack(trackId: string) {
     uuidValidate(trackId);
-    const track = findRecordLegacy(tracksDB, trackId);
-    const trackIndex = tracksDB.indexOf(track as ITrack);
-    tracksDB.splice(trackIndex, 1);
-    const trackFavsIndex = favoritesDB.tracks.indexOf(track as ITrack);
-    favoritesDB.tracks.splice(trackFavsIndex, 1);
+    await findRecord(this.prisma, trackId, 'tracks');
+    await this.prisma.tracks.delete({
+      where: {
+        id: trackId,
+      },
+    });
+    // const trackFavsIndex = favoritesDB.tracks.indexOf(track as ITrack);
+    // favoritesDB.tracks.splice(trackFavsIndex, 1);
   }
 }
