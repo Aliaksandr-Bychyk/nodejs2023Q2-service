@@ -2,10 +2,11 @@ node_modules
 dist
 npm-debug.log
 .git
-Dockerfile.db
-Dockerfile.app
+Dockerfile
+docker-compose.yml
 .dockerignore
 prisma/migrations
 logs
 postgres
 test
+database

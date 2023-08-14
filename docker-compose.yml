@@ -13,8 +13,6 @@ services:
       - "${PORT}:${PORT}"
     env_file:
       - .env
-    volumes:
-      - ./src:/app/src
     restart: always
     networks:
       - service_network
