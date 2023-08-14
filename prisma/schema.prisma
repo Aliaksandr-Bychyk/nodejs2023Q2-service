@@ -48,15 +48,15 @@ model Tracks {
 
 model FavoriteArtists {
   artistId String  @id
-  artist   Artists @relation(fields: [artistId], references: [id])
+  artist   Artists @relation(fields: [artistId], references: [id], onDelete: Cascade)
 }
 
 model FavoriteAlbums {
   albumId String @id
-  album   Albums @relation(fields: [albumId], references: [id])
+  album   Albums @relation(fields: [albumId], references: [id], onDelete: Cascade)
 }
 
 model FavoriteTracks {
   trackId String @id
-  track   Tracks @relation(fields: [trackId], references: [id])
+  track   Tracks @relation(fields: [trackId], references: [id], onDelete: Cascade)
 }

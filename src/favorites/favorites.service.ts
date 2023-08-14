@@ -84,7 +84,7 @@ export class FavoritesService {
     type: string,
   ) {
     uuidValidate(id);
-    const record = await findRecord(prisma, id, model);
+    const record = await findRecord(prisma, id, model, '422');
     const nameId = [
       ['tracks', 'trackId'],
       ['artists', 'artistId'],
