@@ -32,11 +32,13 @@ services:
       - ${PG_DB_PORT}:5432
     volumes:
       - ./postgres:/var/lib/postgresql/data
+      - ./logs:/logs
     networks:
       - service_network
     
 volumes:
   postgres:
+  logs:
 
 networks:
   service_network:
