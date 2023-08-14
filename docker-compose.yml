@@ -5,6 +5,7 @@ services:
     depends_on:
       - database
     container_name: nodejs2023Q2-service-app
+    image: amazingsanya/nodejs2023q2-service-app
     build:
       context: .
       dockerfile: Dockerfile

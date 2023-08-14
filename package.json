@@ -26,7 +26,8 @@
     "database:create": "ts-node prisma/initDatabase.ts",
     "database:init": "npx prisma migrate dev --name init",
     "database:seed": "npx prisma db seed",
-    "docker": "npx prisma generate && npx prisma migrate deploy && nest start --watch"
+    "docker": "npx prisma generate && npx prisma migrate deploy && nest start --watch",
+    "docker:scan": "docker scout cves amazingsanya/nodejs2023q2-service-app"
   },
   "dependencies": {
     "@nestjs/common": "^10.1.3",
