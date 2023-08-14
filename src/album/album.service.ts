@@ -1,21 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import albumsDB from 'src/databases/albumsDB';
+// import albumsDB from 'src/databases/albumsDB';
 import { IAlbum } from 'src/interfaces/IAlbum';
 import { v4 } from 'uuid';
 import uuidValidate from 'src/utils/uuidValidate';
-import findRecordLegacy from 'src/utils/findRecordLegacy';
-import tracksDB from 'src/databases/tracksDB';
-import favoritesDB from 'src/databases/favoritesDB';
+// import findRecordLegacy from 'src/utils/findRecordLegacy';
+// import tracksDB from 'src/databases/tracksDB';
+// import favoritesDB from 'src/databases/favoritesDB';
+import { PrismaService } from 'src/prisma.service';
+import findRecord from 'src/utils/findRecord';
 
 @Injectable()
 export class AlbumService {
-  getAlbums() {
-    return albumsDB;
+  constructor(private prisma: PrismaService) {}
+
+  async getAlbums() {
+    return await this.prisma.albums.findMany();
   }
 
-  postAlbum({ name, year, artistId }: CreateAlbumDto) {
+  async postAlbum({ name, year, artistId }: CreateAlbumDto) {
     if (!(name && year !== undefined)) {
       throw new Error('400');
     }
@@ -25,17 +29,17 @@ export class AlbumService {
       year,
       artistId: artistId ?? null,
     };
-    albumsDB.push(newAlbum);
-    return newAlbum;
+    return await this.prisma.albums.create({
+      data: newAlbum,
+    });
   }
 
-  getAlbum(albumId: string) {
+  async getAlbum(albumId: string) {
     uuidValidate(albumId);
-    const album = findRecordLegacy(albumsDB, albumId);
-    return album;
+    return await findRecord(this.prisma, albumId, 'albums');
   }
 
-  putAlbum(albumId: string, { name, year, artistId }: UpdateAlbumDto) {
+  async putAlbum(albumId: string, { name, year, artistId }: UpdateAlbumDto) {
     uuidValidate(albumId);
     if (
       !(
@@ -47,23 +51,32 @@ export class AlbumService {
     ) {
       throw new Error('400');
     }
-    const album = findRecordLegacy(albumsDB, albumId);
-    (album as IAlbum).name = name;
-    (album as IAlbum).year = year;
-    (album as IAlbum).artistId = artistId ?? null;
-    return album;
+    await findRecord(this.prisma, albumId, 'albums');
+    return await this.prisma.albums.update({
+      where: {
+        id: albumId,
+      },
+      data: {
+        name,
+        year,
+        artistId: artistId ?? null,
+      },
+    });
   }
 
-  deleteAlbum(albumId: string) {
+  async deleteAlbum(albumId: string) {
     uuidValidate(albumId);
-    const album = findRecordLegacy(albumsDB, albumId);
-    const albumIndex = albumsDB.indexOf(album as IAlbum);
-    albumsDB.splice(albumIndex, 1);
-    const track = tracksDB.find((track) => track.albumId === albumId);
-    if (track) {
-      track.albumId = null;
-    }
-    const albumFavsIndex = favoritesDB.albums.indexOf(album as IAlbum);
-    favoritesDB.albums.splice(albumFavsIndex, 1);
+    await findRecord(this.prisma, albumId, 'albums');
+    await this.prisma.albums.delete({
+      where: {
+        id: albumId,
+      },
+    });
+    // const track = tracksDB.find((track) => track.albumId === albumId);
+    // if (track) {
+    //   track.albumId = null;
+    // }
+    // const albumFavsIndex = favoritesDB.albums.indexOf(album as IAlbum);
+    // favoritesDB.albums.splice(albumFavsIndex, 1);
   }
 }
