@@ -27,7 +27,7 @@ Or
 npm install --legacy-peer-deps
 ```
 
-## Running application localy
+## Running application locally
 
 First of all you need to create a `.env` file
 ```
@@ -41,7 +41,7 @@ TOKEN_EXPIRE_TIME=1h
 TOKEN_REFRESH_EXPIRE_TIME=24h
 
 PG_DB_USERNAME=postgres
-PG_HOST=localhost // For local check it should be localhost!
+PG_HOST=localhost # For local check it should be localhost!
 PG_DB_NAME=homelibrary
 PG_DB_PASSWORD=admin
 PG_DB_PORT=5432
@@ -70,6 +70,25 @@ npm start
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
+
+## Check REST service: Logging & Error Handling
+
+After initializing app and db.
+
+Run app
+
+```
+npm start
+```
+
+Run test:auth
+
+```
+npm run test:auth
+```
+
+Please if you have some problems with running app, contact me.
+
 ## Running application using Docker
 
 First of all you need to create a `.env` file
