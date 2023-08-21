@@ -10,6 +10,7 @@ import { AlbumModule } from './album/album.module';
 import { TrackModule } from './track/track.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { config } from 'dotenv';
+import { LoggingService } from './logging/logging.service';
 
 config();
 const port = process.env.PORT || 4000;
@@ -32,6 +33,18 @@ async function bootstrap() {
   });
 
   SwaggerModule.setup('docs', app, document);
+
+  const loggingService = app.get(LoggingService);
+
+  process
+    .on('uncaughtException', (error) => {
+      loggingService.logError(`UncaughtException: ${error.message}`);
+    })
+    .on('unhandledRejection', (error) => {
+      loggingService.logError(
+        `UnhandledRejection: ${(error as Error).message}`,
+      );
+    });
 
   await app.listen(port);
   console.log(`Server starts at http://localhost:${port}`);
