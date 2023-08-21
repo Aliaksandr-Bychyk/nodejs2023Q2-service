@@ -12,7 +12,7 @@ export class AuthService {
   ) {}
 
   async postSignup({ login, password }: CreateUserDto) {
-    const hash = await bcrypt.hash(password, 10);
+    const hash = await bcrypt.hash(password, process.env.CRYPT_SALT || '10');
     return await this.userService.postUser({ login, password: hash });
   }
 
@@ -45,16 +45,16 @@ export class AuthService {
   }
 
   async generateAccessToken(user: any) {
-    return await this.jwtService.signAsync({
-      userId: user.id,
-      login: user.login,
-    });
+    return await this.jwtService.signAsync(
+      { userId: user.id, login: user.login },
+      { expiresIn: process.env.TOKEN_EXPIRE_TIME || '1h' },
+    );
   }
 
   async generateRefreshToken(user: any) {
     return await this.jwtService.signAsync(
       { userId: user.id, login: user.login },
-      { expiresIn: '1d' },
+      { expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME || '24h' },
     );
   }
 }
