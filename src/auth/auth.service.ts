@@ -36,8 +36,8 @@ export class AuthService {
       }
 
       return {
-        accessToken: this.generateAccessToken(user),
-        refreshToken: this.generateRefreshToken(user),
+        accessToken: await this.generateAccessToken(user),
+        refreshToken: await this.generateRefreshToken(user),
       };
     } catch (error) {
       throw new Error('Invalid refresh token');

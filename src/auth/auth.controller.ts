@@ -1,4 +1,4 @@
-import { Controller, Post, HttpCode, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, HttpCode, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   ApiOperation,
@@ -8,13 +8,14 @@ import {
 } from '@nestjs/swagger';
 import exceptionHandler from 'src/utils/exceptionHandler';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { AuthGuard } from './auth.guard';
+import { Public } from './decorators/public.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('/signup')
   @ApiOperation({
     summary: 'Create user',
@@ -66,6 +67,7 @@ export class AuthController {
     }
   }
 
+  @Public()
   @Post('/login')
   @ApiOperation({
     summary: 'Login user',
@@ -123,7 +125,6 @@ export class AuthController {
   }
 
   @Post('/refresh')
-  @UseGuards(AuthGuard)
   @ApiOperation({
     summary: 'Get new pair of Access token and Refresh token',
     description: 'Get new pair of Access token and Refresh token',
@@ -179,12 +180,11 @@ export class AuthController {
       "Authentication failed (no user with such login, password doesn't match actual one, etc.)",
   })
   @HttpCode(200)
-  postRefresh(@Body() refreshTokenDto: { refreshToken: string }) {
-    return this.authService.postRefresh(refreshTokenDto);
-    // try {
-    //   return await this.userService.putUser(userId, updateUserDto);
-    // } catch (error) {
-    //   exceptionHandler(error as Error);
-    // }
+  async postRefresh(@Body() refreshTokenDto: { refreshToken: string }) {
+    try {
+      return await this.authService.postRefresh(refreshTokenDto);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 }
