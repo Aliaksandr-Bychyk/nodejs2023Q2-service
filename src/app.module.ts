@@ -10,9 +10,11 @@ import { LoggingService } from './logging/logging.service';
 import { LoggingMiddleware } from './logging/logging.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { LoggingFilter } from './logging/logging.filter';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     UserModule,
     ArtistModule,
     AlbumModule,

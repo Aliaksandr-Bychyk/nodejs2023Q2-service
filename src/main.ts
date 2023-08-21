@@ -11,6 +11,7 @@ import { TrackModule } from './track/track.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { config } from 'dotenv';
 import { LoggingService } from './logging/logging.service';
+import { AuthModule } from './auth/auth.module';
 
 config();
 const port = process.env.PORT || 4000;
@@ -24,6 +25,7 @@ async function bootstrap() {
   const config: OpenAPIObject = load(apiYaml) as OpenAPIObject;
   const document = SwaggerModule.createDocument(app, config, {
     include: [
+      AuthModule,
       UserModule,
       ArtistModule,
       AlbumModule,
