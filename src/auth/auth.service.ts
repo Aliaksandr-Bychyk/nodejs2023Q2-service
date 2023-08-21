@@ -12,7 +12,7 @@ export class AuthService {
   ) {}
 
   async postSignup({ login, password }: CreateUserDto) {
-    const hash = await bcrypt.hash(password, process.env.CRYPT_SALT || '10');
+    const hash = await bcrypt.hash(password, +process.env.CRYPT_SALT || 10);
     return await this.userService.postUser({ login, password: hash });
   }
 
