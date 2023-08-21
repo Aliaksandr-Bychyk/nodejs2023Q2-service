@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import getCurrentTime from 'src/utils/getCurrentTime';
 
 @Injectable()
 export class LoggingService {
   logRequest(message: string) {
-    console.log(message);
+    const currentTime = getCurrentTime();
+    console.log(`[${currentTime} INFO] ${message}`);
   }
 
   logError(error: any) {
-    console.log(error);
+    const currentTime = getCurrentTime();
+    console.log(`[${currentTime} ERROR] ${error}`);
   }
 }
