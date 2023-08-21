@@ -85,4 +85,12 @@ export class UserService {
       },
     });
   }
+
+  async findByLogin(login: string) {
+    return await this.prisma.users.findMany({
+      where: {
+        login,
+      },
+    });
+  }
 }

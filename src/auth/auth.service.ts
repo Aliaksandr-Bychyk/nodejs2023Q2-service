@@ -1,24 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { UserService } from 'src/user/user.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  create() {
-    return 'This action adds a new auth';
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+  ) {}
+
+  async postSignup({ login, password }: CreateUserDto) {
+    const hash = await bcrypt.hash(password, 10);
+    return await this.userService.postUser({ login, password: hash });
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async postLogin({ login, password }: CreateUserDto) {
+    const user = (await this.userService.findByLogin(login))[0];
+    if (!(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException();
+    }
+
+    const accessToken = await this.generateAccessToken(user);
+    const refreshToken = await this.generateRefreshToken(user);
+    return { accessToken, refreshToken };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  async postRefresh({ refreshToken }: { refreshToken: string }) {
+    try {
+      const decoded = this.jwtService.verify(refreshToken);
+      const user = await this.userService.findByLogin(decoded.login);
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      return {
+        accessToken: this.generateAccessToken(user),
+        refreshToken: this.generateRefreshToken(user),
+      };
+    } catch (error) {
+      throw new Error('Invalid refresh token');
+    }
   }
 
-  update(id: number) {
-    return `This action updates a #${id} auth`;
+  async generateAccessToken(user: any) {
+    return await this.jwtService.signAsync({
+      userId: user.id,
+      login: user.login,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async generateRefreshToken(user: any) {
+    return await this.jwtService.signAsync(
+      { userId: user.id, login: user.login },
+      { expiresIn: '1d' },
+    );
   }
 }

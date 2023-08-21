@@ -11,6 +11,7 @@ import { LoggingMiddleware } from './logging/logging.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { LoggingFilter } from './logging/logging.filter';
 import { AuthModule } from './auth/auth.module';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AuthModule } from './auth/auth.module';
       provide: APP_FILTER,
       useClass: LoggingFilter,
     },
+    JwtService,
   ],
 })
 export class AppModule implements NestModule {

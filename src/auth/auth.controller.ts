@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Param,
-  Delete,
-  HttpCode,
-} from '@nestjs/common';
+import { Controller, Post, HttpCode, Body, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   ApiOperation,
@@ -14,6 +6,9 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
+import exceptionHandler from 'src/utils/exceptionHandler';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { AuthGuard } from './auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -63,13 +58,12 @@ export class AuthController {
     description: 'Bad request. body does not contain required fields.',
   })
   @HttpCode(201)
-  postSignup() {
-    return this.authService.create();
-    // try {
-    //   return await this.userService.putUser(userId, updateUserDto);
-    // } catch (error) {
-    //   exceptionHandler(error as Error);
-    // }
+  async postSignup(@Body() createUserDto: CreateUserDto) {
+    try {
+      return await this.authService.postSignup(createUserDto);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Post('/login')
@@ -119,17 +113,17 @@ export class AuthController {
     description:
       "Authentication failed (no user with such login, password doesn't match actual one, etc.)",
   })
-  @HttpCode(200)
-  postLogin() {
-    return this.authService.findAll();
-    // try {
-    //   return await this.userService.putUser(userId, updateUserDto);
-    // } catch (error) {
-    //   exceptionHandler(error as Error);
-    // }
+  @HttpCode(201)
+  async postLogin(@Body() createUserDto: CreateUserDto) {
+    try {
+      return await this.authService.postLogin(createUserDto);
+    } catch (error) {
+      exceptionHandler(error as Error);
+    }
   }
 
   @Post('/refresh')
+  @UseGuards(AuthGuard)
   @ApiOperation({
     summary: 'Get new pair of Access token and Refresh token',
     description: 'Get new pair of Access token and Refresh token',
@@ -185,8 +179,8 @@ export class AuthController {
       "Authentication failed (no user with such login, password doesn't match actual one, etc.)",
   })
   @HttpCode(200)
-  postRefresh() {
-    return this.authService.create();
+  postRefresh(@Body() refreshTokenDto: { refreshToken: string }) {
+    return this.authService.postRefresh(refreshTokenDto);
     // try {
     //   return await this.userService.putUser(userId, updateUserDto);
     // } catch (error) {
